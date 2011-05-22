@@ -1,0 +1,69 @@
+<?php
+class ServiceLocator 
+{
+    
+    protected static $em;
+    protected static $db;
+    protected static $cache;
+    protected static $config;
+
+    public static function getDb()
+    {
+        if (self::$db === null) {
+            $dbConfig = self::getConfig()->get('doctrine')->get('db');
+            self::$db = Doctrine\DBAL\DriverManager::getConnection($dbConfig->toArray());
+        }
+
+        return self::$db;
+    }
+
+    public static function getCache()
+    {
+        if (self::$cache === null) {
+            $doctrineConfig = self::getConfig()->get('doctrine');
+            $cacheClass = $doctrineConfig->get('cacheClass');
+            self::$cache = new $cacheClass;
+        }
+
+        return self::$cache;
+    }
+
+    /**
+     * @return Zend_Config
+     */
+    public static function getConfig()
+    {
+        if (self::$config === null) {
+            self::$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini');
+        }
+
+        return self::$config;
+    }
+
+    /**
+     * @return Doctrine\ORM\EntityManager
+     */
+    public static function getEm()
+    {
+        if (self::$em === null) {
+            $cache = self::getCache();
+            $db = self::getDb();
+            $config = new \Doctrine\ORM\Configuration();
+            $config->setMetadataCacheImpl($cache);
+            $config->setQueryCacheImpl($cache);
+            $config->setMetadataDriverImpl(
+                $config->newDefaultAnnotationDriver(APPLICATION_PATH . '/models'));
+            $config->setProxyDir(APPLICATION_PATH . '/models/Infrastructure/Proxies');
+            $config->setProxyNamespace('Infrastructure\Proxies');
+            $config->setAutoGenerateProxyClasses(false);
+            self::$em = \Doctrine\ORM\EntityManager::create($db, $config);
+        }
+
+        return self::$em;
+    }
+
+    public static function getSubscriptionsRepository()
+    {
+        return self::getEm()->getRepository('\Domain\Subscription');
+    }
+}
