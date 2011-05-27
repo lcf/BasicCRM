@@ -3,16 +3,25 @@ namespace Domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+/** @Entity @Table(name="companies") */
 class Company
 {
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
+    /** @Column(type="string") */
     protected $name;
 
+    /** @ManyToOne(targetEntity="Domain\Subscription") */
     protected $subscription;
 
+    /** @Column(name="is_activated", type="boolean") */
     protected $isActivated;
 
+    /** @OneToMany(targetEntity="Domain\User", mappedBy="company", cascade={"all"}) */
     protected $users;
 
     public function __construct($name, Subscription $subscription, User $admin)

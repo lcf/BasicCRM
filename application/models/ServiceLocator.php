@@ -3,6 +3,10 @@ class ServiceLocator
 {
     
     protected static $em;
+
+    /**
+     * @var Doctrine\DBAL\Connection
+     */
     protected static $db;
     protected static $cache;
     protected static $config;
@@ -34,10 +38,15 @@ class ServiceLocator
     public static function getConfig()
     {
         if (self::$config === null) {
-            self::$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini');
+            self::$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini', 'main');
         }
 
         return self::$config;
+    }
+
+    public static function setConfig(Zend_Config $config)
+    {
+        self::$config = $config;
     }
 
     /**

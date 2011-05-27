@@ -1,18 +1,28 @@
 <?php
 namespace Domain;
 
+/** @Entity @Table(name="users") */
 class User
 {
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
+    /** @Column(type="string") */
     protected $name;
 
+    /** @Column(type="string") */
     protected $email;
 
+    /** @Column(name="password_hash", type="string") */
     protected $passwordHash;
 
+    /** @Column(name="is_admin", type="boolean") */
     protected $isAdmin;
 
+    /** @ManyToOne(targetEntity="Domain\Company", inversedBy="users") */
     protected $company;
 
     public function __construct($email, $name, $password, $isAdmin = false)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+  <subscriptions
+    id="1"
+    name="Standard"
+  />
+  <subscriptions
+    id="2"
+    name="Pro"
+  />
+  <users/>
+  <companies/>
+</dataset>

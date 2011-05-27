@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests suite entry point
+ * Doctrine console tools entry point
  */
 // Define path to application directory
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
@@ -16,4 +16,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
 
-ServiceLocator::setConfig(new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini', 'tests'));
+$helperSet = new Symfony\Component\Console\Helper\HelperSet(array(
+    'em' => new Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper(ServiceLocator::getEm()),
+));

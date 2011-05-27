@@ -10,8 +10,8 @@ class CompanyService
         $adminPassword, $adminPasswordRepeated)
     {
         // Getting objects we're going to need in this service, using our ServiceLocator
-        $subscriptionRepository = ServiceLocator::getSubscriptionsRepository();
-        $entityManager = ServiceLocator::getEntityManager();
+        $subscriptionRepository = \ServiceLocator::getSubscriptionsRepository();
+        $entityManager = \ServiceLocator::getEm();
 
         // 1. finds the subscription plan by its identifier in the data storage
         $subscription = $subscriptionRepository->find($subscriptionId);
