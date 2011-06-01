@@ -8,8 +8,18 @@ class ServiceLocator
      * @var Doctrine\DBAL\Connection
      */
     protected static $db;
+
     protected static $cache;
+
+    /**
+     * @var Zend_Config
+     */
     protected static $config;
+
+    /**
+     * @var Doctrine\ORM\EntityRepository
+     */
+    protected static $subscriptionRepository;
 
     public static function getDb()
     {
@@ -71,8 +81,22 @@ class ServiceLocator
         return self::$em;
     }
 
+    public static function setEm(Doctrine\Orm\EntityManager $em)
+    {
+        self::$em = $em;
+    }
+
+    public static function setSubscriptionRepository(Doctrine\Orm\EntityRepository $repository)
+    {
+        self::$subscriptionRepository = $repository;
+    }
+
     public static function getSubscriptionsRepository()
     {
-        return self::getEm()->getRepository('\Domain\Subscription');
+        if (self::$subscriptionRepository === null) {
+            self::$subscriptionRepository = self::getEm()->getRepository('\Domain\Subscription');
+        }
+        
+        return self::$subscriptionRepository;
     }
 }
