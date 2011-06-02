@@ -123,7 +123,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      * has a collection of users belonging to it
      * aspect: users belonging to a company must be associated with the company
      */
-    public function testNewUsersMayBeAdded()
+    public function testBelongingUsersAssociated()
     {
         // here is we cheating again:
         // tru way is to create a mock of a User and set it expecting setCompany to be called upon
@@ -133,4 +133,3 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($company, 'company', $admin);
     }
 }
-
