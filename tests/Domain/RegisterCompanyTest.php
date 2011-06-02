@@ -5,7 +5,7 @@ namespace Tests\Domain;
  * We'll need the following annotation in tests where we change static variables of our ServiceLocator class
  * so they'll be restored afterwards.
  * It's not really a problem, because remember:
- * ServiceLocator is the only class with anything "static" we have.
+ * ServiceLocator is the only class with anything "static" we gonna have.
  *
  * @backupStaticAttributes enabled
  */
@@ -51,7 +51,8 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo($subscriptionId))
             ->will($this->returnValue($this->getMock('Domain\Subscription')));
 
-        $this->_getService()->registerCompany($subscriptionId, 'Test Company', 'John Smith', 'valid-email@example.com', '123456', '123456');
+        $this->_getService()->registerCompany($subscriptionId, 'Test Company', 'John Smith',
+                                              'valid-email@example.com', '123456', '123456');
     }
 
     /*
@@ -66,7 +67,8 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
             ->with($this->anything())
             ->will($this->returnValue(null)); // null means not found
 
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith', 'valid-email@example.com', '123456', '123456');
+        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+                                              'valid-email@example.com', '123456', '123456');
     }
 
     /*
@@ -80,7 +82,8 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
             ->with($this->anything())
             ->will($this->returnValue($this->getMock('Domain\Subscription')));
         $this->setExpectedException('DomainException', 'Passwords are not equal');
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith', 'valid-email@example.com', '1234568', '1234567');
+        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+                                              'valid-email@example.com', '1234568', '1234567');
     }
 
     /*
@@ -105,7 +108,8 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('flush');
 
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith', 'valid-email@example.com', '1234567', '1234567');
+        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+                                              'valid-email@example.com', '1234567', '1234567');
     }
 }
 
