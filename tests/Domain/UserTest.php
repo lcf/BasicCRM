@@ -129,5 +129,23 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $user->setCompany($company1);
         $user->setCompany($company2);
     }
+
+    /*
+     * there is a way to define whether a user is an admin or not
+     */
+    public function testIsAdmin()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $this->assertTrue($user->isAdmin());
+    }
+
+    /*
+     * there is a way to define whether a user is an admin or not
+     */
+    public function testIsNotAdmin()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', false);
+        $this->assertFalse($user->isAdmin());
+    }
 }
 
