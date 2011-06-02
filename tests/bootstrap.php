@@ -8,7 +8,6 @@ define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 // Ensure is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     APPLICATION_PATH . '/models',
-    APPLICATION_PATH . '/../tests',
     get_include_path(),
 )));
 
