@@ -12,6 +12,11 @@ class ServiceLocator
     protected static $cache;
 
     /**
+     * @var Zend_Controller_Front
+     */
+    protected static $frontController;
+
+    /**
      * @var Zend_Config
      */
     protected static $config;
@@ -20,6 +25,16 @@ class ServiceLocator
      * @var Doctrine\ORM\EntityRepository
      */
     protected static $subscriptionRepository;
+
+    public static function getFrontController()
+    {
+        if (self::$frontController === null) {
+            self::$frontController = Zend_Controller_Front::getInstance()
+                ->setControllerDirectory(APPLICATION_PATH . '/controllers')->throwExceptions(true);
+        }
+
+        return self::$frontController;
+    }
 
     public static function getDb()
     {

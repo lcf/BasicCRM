@@ -6,7 +6,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
     protected function getConnection()
     {
         $pdo = \ServiceLocator::getDb()->getWrappedConnection();
-        return $this->createDefaultDBConnection($pdo, 'basiccrm_tests');
+        return $this->createDefaultDBConnection($pdo);
     }
 
     protected function getDataSet()
@@ -25,9 +25,11 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
     public function testRegisterCompany()
     {
         $companyService = new \Services\CompanyService();
-        $companyService->registerCompany(1, 'New Company', 'John Smith', 'john-smith@example.com', '1234567', '1234567');
+        $companyService->registerCompany(1, 'New Company', 'John Smith',
+                                         'john-smith@example.com', '1234567', '1234567');
         $expected = $this->createFlatXMLDataSet(dirname(__FILE__).'/_files/register-company.xml');
         $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+        // we're listing tables that matter 
         $actual->addTable('users');
         $actual->addTable('companies');
         $this->assertDataSetsEqual($expected, $actual);
