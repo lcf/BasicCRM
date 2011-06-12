@@ -40,3 +40,8 @@ CREATE  TABLE `subscriptions` (
   PRIMARY KEY (`id`) );
 
 
+-- adding sample subscriptions manually
+
+INSERT INTO `subscriptions` (`id`, `name`) VALUES (1, 'Standard');
+INSERT INTO `subscriptions` (`id`, `name`) VALUES (2, 'Pro');
+

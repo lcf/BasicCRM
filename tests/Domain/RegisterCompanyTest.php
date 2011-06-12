@@ -18,10 +18,10 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $subscriptionRepository = $this->getMockBuilder('Doctrine\Orm\EntityRepository')
+        $subscriptionRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
-        $em = $this->getMockBuilder('Doctrine\Orm\EntityManager')
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
         \ServiceLocator::setSubscriptionRepository($subscriptionRepository);
