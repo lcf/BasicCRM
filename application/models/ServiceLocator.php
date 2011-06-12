@@ -22,15 +22,31 @@ class ServiceLocator
     protected static $config;
 
     /**
+     * @var Services\CompanyService
+     */
+    protected static $companyService;
+
+    /**
      * @var Doctrine\ORM\EntityRepository
      */
     protected static $subscriptionRepository;
+
+    public static function getCompanyService()
+    {
+        if (self::$companyService === null) {
+            self::$companyService = new \Services\CompanyService();
+        }
+
+        return self::$companyService;
+    }
 
     public static function getFrontController()
     {
         if (self::$frontController === null) {
             self::$frontController = Zend_Controller_Front::getInstance()
-                ->setControllerDirectory(APPLICATION_PATH . '/controllers')->throwExceptions(true);
+                ->setControllerDirectory(APPLICATION_PATH . '/controllers');
+            Zend_Layout::startMvc(
+                array('layoutPath' => APPLICATION_PATH . '/views/layouts', 'layout' => 'index'));
         }
 
         return self::$frontController;
