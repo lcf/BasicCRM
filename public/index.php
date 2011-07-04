@@ -4,6 +4,7 @@
  */
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+define('APPLICATION_ENV', 'web');
 
 set_include_path(implode(PATH_SEPARATOR, array(
     APPLICATION_PATH . '/models',

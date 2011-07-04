@@ -8,7 +8,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
     /**
      * Helper method creating an instance of company
      *
-     * @return Domain\Company
+     * @return \Domain\Company
      */
     protected function _getCompany()
     {
@@ -30,6 +30,15 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $company = $this->_getCompany();
         // just checking that the attribute exists
         $this->assertAttributeEmpty('id', $company);
+    }
+
+    /*
+     * there is a way define a company's unique identifier
+     */
+    public function testGetId()
+    {
+        $company = $this->_getCompany();
+        $this->assertAttributeEquals($company->getId(), 'id', $company);
     }
 
     /*
@@ -107,6 +116,41 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * may be activated with a confirmation code
+     */
+    public function testMayBeActivatedWithConfirmationCode()
+    {
+        $company = $this->_getCompany();
+        $confirmationCode = $company->getConfirmationCode();
+        $company->activate($confirmationCode);
+        $this->assertAttributeEquals(true, 'isActivated', $company);
+    }
+
+    /*
+     * error if attempt to activate an already activated company
+     */
+    public function testCanBeActivatedOnlyOnce()
+    {
+        $company = $this->_getCompany();
+        $confirmationCode = $company->getConfirmationCode();
+        $company->activate($confirmationCode);
+        // attempt to activate it again
+        $this->setExpectedException('DomainException', 'Company\'s been activated already');
+        $company->activate($confirmationCode);
+    }
+
+    /*
+     * error if attempt to activate an already activated company
+     */
+    public function testValidConfirmationCode()
+    {
+        $company = $this->_getCompany();
+        $confirmationCode = $company->getConfirmationCode();
+        $this->setExpectedException('DomainException', 'Confirmation code is not valid');
+        $company->activate($confirmationCode . 'wrong');
+    }
+
+    /*
      * has a collection of users belonging to it
      * aspect: has users
      */
@@ -117,6 +161,16 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $company = new Company('Test Company', $subscription, $admin);
         $users = new \Doctrine\Common\Collections\ArrayCollection(array($admin));
         $this->assertAttributeEquals($users, 'users', $company);
+    }
+
+    /*
+     * there is a way to figure out who's the administrator of a company
+     */
+    public function testGetAdmin()
+    {
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $this->getMock('Domain\Subscription'), $admin);
+        $this->assertEquals($admin, $company->getAdmin());
     }
 
     /*

@@ -140,6 +140,24 @@ class UserTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * there is a way to find out user name
+     */
+    public function testGetName()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $this->assertEquals('John Smith', $user->getName());
+    }
+
+    /*
+     * there is a way to find out user email
+     */
+    public function testGetEmail()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $this->assertEquals('valid-email@example.com', $user->getEmail());
+    }
+
+    /*
      * there is a way to define whether a user is an admin or not
      */
     public function testIsNotAdmin()

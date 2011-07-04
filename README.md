@@ -16,9 +16,18 @@ Register a company
 1. finds the subscription plan by its identifier in the data storage
 2. error if the plan is for some reason not found
 3. error if two passwords provided are not equal
-4. creates new user admin account based on the email, name and password provided
-5. creates company based on company name provided, new admin user and the subscription plan found
-6. saves the new company in the data storage
+4. error if email is already registered in the system
+5. creates new user admin account based on the email, name and password provided
+6. creates company based on company name provided, new admin user and the subscription plan found
+7. saves the new company in the data storage
+8. sends out a confirmation email to confirm the email address
+
+Registration confirmation
+-------------------------
+1. finds company by its identifier
+2. error if company isn't found
+3. activates company with the confirmation code given
+4. persists changes in the data storage
 
 User
 ----
@@ -29,6 +38,8 @@ User
 * may be either admin or not admin (admin has some special privileges)
 * is not admin by default
 * there is a way to define whether a user is an admin or not
+* there is a way to find out user email
+* there is a way to find out user name
 * belongs to a single company
 
 Company
@@ -40,6 +51,14 @@ Company
 * may be either activated or not activated
 * is not activated by default
 * has a collection of users belonging to it
+* there is a way to calculate the code required for company registration confirmation
+* may be activated with a confirmation code
+    1. error if attempt to activate an already activated company
+    2. error if confirmation code is not valid
+    3. activates company
+* there is a way to figure out who's the administrator of a company
+* there is a way define a company's unique identifier
+
 
 Subscription plan
 -----------------

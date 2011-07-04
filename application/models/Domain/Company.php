@@ -39,6 +39,43 @@ class Company
         $this->addUser($admin);
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return \Domain\User
+     */
+    public function getAdmin()
+    {
+        foreach ($this->users as $user) {
+            if ($user->isAdmin()) {
+                return $user;
+            }
+        }
+    }
+
+    public function getConfirmationCode()
+    {
+        $salt = \ServiceLocator::getDomainConfig()->get('confirmationCodeSalt');
+        return sha1($this->id . $salt . $this->name);
+    }
+
+    public function activate($confirmationCode)
+    {
+        // 1. error if attempt to activate an already activated company
+        if ($this->isActivated) {
+            throw new \DomainException('Company\'s been activated already');
+        }
+        // 2. error if confirmation code is not valid
+        if ($confirmationCode !== $this->getConfirmationCode()) {
+            throw new \DomainException('Confirmation code is not valid');
+        }
+        // 3. activates company
+        $this->isActivated = true;
+    }
+
     protected function addUser(User $newUser)
     {
         foreach ($this->users as $existingUser) {

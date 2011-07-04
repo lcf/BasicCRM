@@ -31,6 +31,38 @@ class ServiceLocator
      */
     protected static $subscriptionRepository;
 
+    /**
+     * @var Doctrine\ORM\EntityRepository
+     */
+    protected static $usersRepository;
+
+    /**
+     * @var Doctrine\ORM\EntityRepository
+     */
+    protected static $companiesRepository;
+
+    /**
+     * @var Infrastructure\Mailer
+     */
+    protected static $mailer;
+
+    /**
+     * @return \Infrastructure\Mailer
+     */
+    public static function getMailer()
+    {
+        if (self::$mailer === null) {
+            self::$mailer = new \Infrastructure\Mailer(self::getConfig()->get('mail'));
+        }
+
+        return self::$mailer;
+    }
+
+    public static function setMailer(Infrastructure\Mailer $mailer)
+    {
+        self::$mailer = $mailer;
+    }
+
     public static function getCompanyService()
     {
         if (self::$companyService === null) {
@@ -62,6 +94,14 @@ class ServiceLocator
         return self::$db;
     }
 
+    /**
+     * @return Zend_Config
+     */
+    public static function getDomainConfig()
+    {
+        return self::getConfig()->get('domain');
+    }
+
     public static function getCache()
     {
         if (self::$cache === null) {
@@ -79,7 +119,12 @@ class ServiceLocator
     public static function getConfig()
     {
         if (self::$config === null) {
-            self::$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini', 'main');
+            self::$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.ini', APPLICATION_ENV, true);
+            if (is_readable(APPLICATION_PATH . '/configs/config.local.ini')) {
+                self::$config->merge(new Zend_Config_Ini(APPLICATION_PATH . '/configs/config.local.ini',
+                                                         APPLICATION_ENV));
+            }
+            self::$config->setReadOnly();
         }
 
         return self::$config;
@@ -117,7 +162,7 @@ class ServiceLocator
         self::$em = $em;
     }
 
-    public static function setSubscriptionRepository(Doctrine\Orm\EntityRepository $repository)
+    public static function setSubscriptionsRepository(Doctrine\Orm\EntityRepository $repository)
     {
         self::$subscriptionRepository = $repository;
     }
@@ -129,5 +174,33 @@ class ServiceLocator
         }
         
         return self::$subscriptionRepository;
+    }
+
+    public static function setUsersRepository(Doctrine\Orm\EntityRepository $repository)
+    {
+        self::$usersRepository = $repository;
+    }
+
+    public static function getUsersRepository()
+    {
+        if (self::$usersRepository === null) {
+            self::$usersRepository = self::getEm()->getRepository('\Domain\User');
+        }
+
+        return self::$usersRepository;
+    }
+
+    public static function setCompaniesRepository(Doctrine\Orm\EntityRepository $repository)
+    {
+        self::$companiesRepository = $repository;
+    }
+
+    public static function getCompaniesRepository()
+    {
+        if (self::$companiesRepository === null) {
+            self::$companiesRepository = self::getEm()->getRepository('\Domain\Company');
+        }
+
+        return self::$companiesRepository;
     }
 }

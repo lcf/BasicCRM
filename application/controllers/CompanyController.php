@@ -17,6 +17,15 @@ class CompanyController extends Zend_Controller_Action
         }
     }
 
+    public function confirmAction()
+    {
+        $companyService = ServiceLocator::getCompanyService();
+        $companyService->confirmCompanyRegistration(
+            $this->_getParam('id'),
+            $this->_getParam('code')
+        );
+    }
+
     public function registerSuccessAction()
     {
         // just view here

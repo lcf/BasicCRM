@@ -1,0 +1,5 @@
+Welcome to Basic CRM!
+
+Please, confirm your registration by following the link below:
+<? /* TODO think something up for the baseUrl thing */ ?>
+http://basiccrm.lcf.name/company/confirm/id/<?= $this->company->getId() ?>/code/<?= $this->company->getConfirmationCode() ?>

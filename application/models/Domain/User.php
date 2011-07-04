@@ -44,6 +44,16 @@ class User
         return $this->isAdmin;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     public function setCompany(Company $company)
     {
         if (!$this->company) {

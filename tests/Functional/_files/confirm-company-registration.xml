@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+  <companies
+      id="1"
+      name="New Company"
+      subscription_id="1"
+      is_activated="1"
+  />
+</dataset>

@@ -6,12 +6,33 @@ use Domain\Company,
 
 class CompanyService
 {
+    public function confirmCompanyRegistration($companyId, $confirmationCode)
+    {
+        // Getting objects we're going to need in this service, using our ServiceLocator
+        $entityManager = \ServiceLocator::getEm();
+        $companiesRepository = \ServiceLocator::getCompaniesRepository();
+
+        // 1. finds a company by its identifier
+        $company = $companiesRepository->find($companyId);
+        // 2. error if company isn't found
+        if (!$company) {
+            throw new \DomainException('Company is not found');
+        }
+        // 3. activates company with the confirmation code given
+        $company->activate($confirmationCode);
+        // 4. persists changes in the data storage
+        $entityManager->persist($company);
+        $entityManager->flush();
+    }
+
     public function registerCompany($subscriptionId, $companyName, $adminName, $adminEmail,
         $adminPassword, $adminPasswordRepeated)
     {
         // Getting objects we're going to need in this service, using our ServiceLocator
         $subscriptionRepository = \ServiceLocator::getSubscriptionsRepository();
         $entityManager = \ServiceLocator::getEm();
+        $usersRepository = \ServiceLocator::getUsersRepository();
+        $mailer = \ServiceLocator::getMailer();
 
         // 1. finds the subscription plan by its identifier in the data storage
         $subscription = $subscriptionRepository->find($subscriptionId);
@@ -23,12 +44,20 @@ class CompanyService
         if ($adminPassword != $adminPasswordRepeated) {
             throw new \DomainException('Passwords are not equal');
         }
-        // 4. creates new user admin account based on the email, name and password provided
+        // 4. error if email is already registered in the system
+        if ($usersRepository->findByEmail($adminEmail)) {
+            throw new \DomainException('User with email ' . $adminEmail . ' has been already registered');
+        }
+        // 5. creates new user admin account based on the email, name and password provided
         $adminUser = new User($adminEmail, $adminName, $adminPassword, true);
-        // 5. creates company based on company name provided, new admin user and the subscription plan found
+        // 6. creates company based on company name provided, new admin user and the subscription plan found
         $company = new Company($companyName, $subscription, $adminUser);
-        // 6. saves the new company in the data storage
-        $entityManager->persist($company);
-        $entityManager->flush();
+        $entityManager->transactional(function($entityManager) use ($company, $mailer) {
+            // 7. saves the new company in the data storage
+            $entityManager->persist($company);
+            $entityManager->flush();
+            // 8. sends out a confirmation email to confirm the email address
+            $mailer->registrationConfirmation($company);
+        });
     }
 }

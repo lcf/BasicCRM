@@ -1,16 +1,18 @@
 <?php
 namespace Tests\Domain;
 
-/**
- * We'll need the following annotation in tests where we change static variables of our ServiceLocator class
- * so they'll be restored afterwards.
- * It's not really a problem, because remember:
- * ServiceLocator is the only class with anything "static" we gonna have.
- *
- * @backupStaticAttributes enabled
- */
 class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
 {
+    protected $backupStaticAttributes = true;
+
+    protected $usersRepositoryMock;
+
+    protected $subscriptionsRepositoryMock;
+
+    protected $emMock;
+
+    protected $mailerMock;
+
     /**
      * We'll create some simple mocks for every test to configure
      *
@@ -18,23 +20,68 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $subscriptionRepository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        \ServiceLocator::setSubscriptionRepository($subscriptionRepository);
-        \ServiceLocator::setEm($em);
+        $this->emMock = $this->getMock('Doctrine\ORM\EntityManager', array(), array(), '', false);
+        $this->mailerMock = $this->getMock('Infrastructure\Mailer', array(), array(), '', false);
+        $repositoryMockBuilder = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                                      ->disableOriginalConstructor();
+        $this->subscriptionsRepositoryMock = $repositoryMockBuilder->getMock();
+        $this->usersRepositoryMock = $repositoryMockBuilder->setMethods(array('findByEmail'))->getMock();
+        \ServiceLocator::setEm($this->emMock);
+        \ServiceLocator::setMailer($this->mailerMock);
+        \ServiceLocator::setSubscriptionsRepository($this->subscriptionsRepositoryMock);
+        \ServiceLocator::setUsersRepository($this->usersRepositoryMock);
     }
 
     /**
-     * @todo add getCompanyService to the ServiceLocator
+     * General expectation for subscription repository is to return one
+     *
+     * @return void
+     */
+    protected function mockSubscriptionLookup()
+    {
+        $this->subscriptionsRepositoryMock
+            ->expects($this->once())
+            ->method('find')
+            ->with($this->anything())
+            ->will($this->returnValue($this->getMock('Domain\Subscription'))); // subscription is found
+    }
+
+    /**
+     * General expectation for users repository is not to find anything
+     *
+     * @return void
+     */
+    protected function mockUserLookupByEmail()
+    {
+        $this->usersRepositoryMock
+            ->expects($this->once())
+            ->method('findByEmail')
+            ->with($this->anything())
+            ->will($this->returnValue(null)); // email is unique
+    }
+
+    /**
+     * In order to properly test the code hidden inside the transactional closure
+     *
+     * @return void
+     */
+    protected function mockEmTransactional()
+    {
+        $em = $this->emMock;
+        $this->emMock
+            ->expects($this->once())
+            ->method('transactional')
+            ->with($this->anything())
+            ->will($this->returnCallback(
+                function($value) use($em) {$value($em);}));
+    }
+
+    /**
      * @return \Services\CompanyService
      */
-    protected function _getService()
+    protected function getService()
     {
-        return new \Services\CompanyService();
+        return \ServiceLocator::getCompanyService();
     }
 
     // ----------------------------------------------------------------------------------
@@ -44,14 +91,15 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindSubscriptionPlanByItsId()
     {
+        $this->mockUserLookupByEmail();
         $subscriptionId = 12;
-        \ServiceLocator::getSubscriptionsRepository()
+        $this->subscriptionsRepositoryMock
             ->expects($this->once())
             ->method('find')
             ->with($this->equalTo($subscriptionId))
             ->will($this->returnValue($this->getMock('Domain\Subscription')));
 
-        $this->_getService()->registerCompany($subscriptionId, 'Test Company', 'John Smith',
+        $this->getService()->registerCompany($subscriptionId, 'Test Company', 'John Smith',
                                               'valid-email@example.com', '123456', '123456');
     }
 
@@ -60,14 +108,13 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testSubscriptionPlanNotFound()
     {
-        $this->setExpectedException('DomainException', 'Subscription is not found');
-        \ServiceLocator::getSubscriptionsRepository()
+        $this->subscriptionsRepositoryMock
             ->expects($this->once())
             ->method('find')
             ->with($this->anything())
-            ->will($this->returnValue(null)); // null means not found
-
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+            ->will($this->returnValue(null)); // null means nothing found
+        $this->setExpectedException('DomainException', 'Subscription is not found');
+        $this->getService()->registerCompany(12, 'Test Company', 'John Smith',
                                               'valid-email@example.com', '123456', '123456');
     }
 
@@ -76,14 +123,28 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testPasswordsMustBeEqual()
     {
-        \ServiceLocator::getSubscriptionsRepository()
-            ->expects($this->once())
-            ->method('find')
-            ->with($this->anything())
-            ->will($this->returnValue($this->getMock('Domain\Subscription')));
+        $this->mockSubscriptionLookup();
         $this->setExpectedException('DomainException', 'Passwords are not equal');
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+        $this->getService()->registerCompany(12, 'Test Company', 'John Smith',
                                               'valid-email@example.com', '1234568', '1234567');
+    }
+
+    /*
+     * error if email is already registered in the system
+     */
+    public function testEmailMustBeUnique()
+    {
+        $this->mockSubscriptionLookup();
+        $alreadyRegisteredEmail = 'not-unique-email@example.com';
+        $this->usersRepositoryMock
+            ->expects($this->once())
+            ->method('findByEmail')
+            ->with($alreadyRegisteredEmail)
+            ->will($this->returnValue($this->getMock('Domain\User', array(), array(), '', false)));
+        $this->setExpectedException('DomainException',
+            'User with email ' . $alreadyRegisteredEmail . ' has been already registered');
+        $this->getService()->registerCompany(12, 'Test Company', 'John Smith',
+                                              $alreadyRegisteredEmail, '1234567', '1234567');
     }
 
     /*
@@ -93,22 +154,38 @@ class RegisterCompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistNewCompany()
     {
-        \ServiceLocator::getSubscriptionsRepository()
-            ->expects($this->once())
-            ->method('find')
-            ->with($this->anything())
-            ->will($this->returnValue($this->getMock('Domain\Subscription')));
+        $this->mockUserLookupByEmail();
+        $this->mockSubscriptionLookup();
+        $this->mockEmTransactional();
 
-        \ServiceLocator::getEm()
+        $this->emMock
             ->expects($this->once())
             ->method('persist')
             ->with($this->isInstanceOf('Domain\Company'));
 
-        \ServiceLocator::getEm()
+        $this->emMock
             ->expects($this->once())
             ->method('flush');
 
-        $this->_getService()->registerCompany(12, 'Test Company', 'John Smith',
+        $this->getService()->registerCompany(12, 'Test Company', 'John Smith',
+                                              'valid-email@example.com', '1234567', '1234567');
+    }
+
+    /*
+     * sends out a confirmation email to confirm the email address
+     */
+    public function testSendsConfirmationEmail()
+    {
+        $this->mockUserLookupByEmail();
+        $this->mockSubscriptionLookup();
+        $this->mockEmTransactional();
+
+        $this->mailerMock
+            ->expects($this->once())
+            ->method('registrationConfirmation')
+            ->with($this->isInstanceOf('Domain\Company'));
+
+        $this->getService()->registerCompany(12, 'Test Company', 'John Smith',
                                               'valid-email@example.com', '1234567', '1234567');
     }
 }

@@ -8,6 +8,6 @@
     id="2"
     name="Pro"
   />
-  <users/>
-  <companies/>
+  <companies />
+  <users />
 </dataset>
