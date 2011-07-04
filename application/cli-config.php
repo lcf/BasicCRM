@@ -4,6 +4,7 @@
  */
 // Define path to application directory
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+define('APPLICATION_ENV', 'web');
 
 // Ensure is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(

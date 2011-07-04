@@ -29,7 +29,7 @@ class Mailer
     {
         $transportClass = $config->get('transportClass');
         $options = $config->get('options');
-        if ($transportClass == 'Zend_Mail_Transport_Smtp') {
+        if ($transportClass == '\Zend_Mail_Transport_Smtp') {
             $sender = new \Zend_Mail_Transport_Smtp($options->get('host'), $options->toArray());
         } else {
             $sender = new $transportClass($options->toArray());
