@@ -1,7 +1,7 @@
 BasicCrm project
 ================
 
-BasicCrm is a demo project for the series of articles on applying Development Driven Design in PHP.
+BasicCrm is a demo project for the series of articles on applying Domain-Driven Design (http://en.wikipedia.org/wiki/Domain-driven_design) in PHP.
 Working version of the system may be found here: http://BasicCrm.lcf.name
 Model designing and building process is desribed in details here: http://blog.lcf.name, starting with this article: http://blog.lcf.name/2011/05/application-overview.html
 
