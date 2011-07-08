@@ -9,6 +9,12 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->cleanTempFilesDir();
     }
 
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->cleanTempFilesDir();
+    }
+
     protected function getConnection()
     {
         $pdo = \ServiceLocator::getDb()->getWrappedConnection();
