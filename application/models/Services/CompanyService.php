@@ -11,6 +11,7 @@ class CompanyService
         // Getting objects we're going to need in this service, using our ServiceLocator
         $entityManager = \ServiceLocator::getEm();
         $companiesRepository = \ServiceLocator::getCompaniesRepository();
+        $salt = \ServiceLocator::getDomainConfig()->get('confirmationCodeSalt');
 
         // 1. finds a company by its identifier
         $company = $companiesRepository->find($companyId);
@@ -19,7 +20,7 @@ class CompanyService
             throw new \DomainException('Company is not found');
         }
         // 3. activates company with the confirmation code given
-        $company->activate($confirmationCode);
+        $company->activate($confirmationCode, $salt);
         // 4. persists changes in the data storage
         $entityManager->persist($company);
         $entityManager->flush();

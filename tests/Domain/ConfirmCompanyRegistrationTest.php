@@ -81,7 +81,7 @@ class ConfirmCompanyRegistrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
-     * activates company with the confirmation code given
+     * activates company with the confirmation code given and security salt
      */
     public function testActivatesCompanyWithConfirmationCodeGiven()
     {
@@ -89,8 +89,8 @@ class ConfirmCompanyRegistrationTest extends \PHPUnit_Framework_TestCase
         $company = $this->getMockBuilder('Domain\Company')->disableOriginalConstructor()->getMock();
         $company->expects($this->once())
                 ->method('activate')
-                ->with($this->equalTo($confirmationCode));
-
+                ->with($this->equalTo($confirmationCode), $this->anything());
+        
         $this->companiesRepositoryMock
             ->expects($this->once())
             ->method('find')

@@ -26,7 +26,7 @@ Registration confirmation
 -------------------------
 1. finds company by its identifier
 2. error if company isn't found
-3. activates company with the confirmation code given
+3. activates company with the confirmation code given and security salt
 4. persists changes in the data storage
 
 User
@@ -52,7 +52,9 @@ Company
 * is not activated by default
 * has a collection of users belonging to it
 * there is a way to calculate the code required for company registration confirmation
-* may be activated with a confirmation code
+    1. to calculate the code security salt is required
+    2. code is a hash function from company id, security salt and company name
+* may be activated with a confirmation code and security salt
     1. error if attempt to activate an already activated company
     2. error if confirmation code is not valid
     3. activates company

@@ -52,7 +52,22 @@ class ServiceLocator
     public static function getMailer()
     {
         if (self::$mailer === null) {
-            self::$mailer = new \Infrastructure\Mailer(self::getConfig()->get('mail'));
+            // getting the config for the mailer
+            $mailConfig = self::getConfig()->get('mail');
+            // particular transport class and transport options
+            $transportClass = $mailConfig->get('transportClass');
+            $options = $mailConfig->get('options');
+            // this little stupidity here thanks to Zend_Mail_Transport design defects
+            if ($transportClass == '\Zend_Mail_Transport_Smtp') {
+                $sender = new \Zend_Mail_Transport_Smtp($options->get('host'), $options->toArray());
+            } else {
+                $sender = new $transportClass($options->toArray());
+            }
+            // Defining where templates for the mailer are located
+            $builder = new \Zend_View(array('scriptPath' => APPLICATION_PATH . '/templates'));
+            self::$mailer = new \Infrastructure\Mailer($sender, $builder,
+            // also pass default from email and name to the mailer constructor
+                $mailConfig->get('fromEmail'), $mailConfig->get('fromName'));
         }
 
         return self::$mailer;

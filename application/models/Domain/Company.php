@@ -56,20 +56,19 @@ class Company
         }
     }
 
-    public function getConfirmationCode()
+    public function getConfirmationCode($salt)
     {
-        $salt = \ServiceLocator::getDomainConfig()->get('confirmationCodeSalt');
         return sha1($this->id . $salt . $this->name);
     }
 
-    public function activate($confirmationCode)
+    public function activate($confirmationCode, $salt)
     {
         // 1. error if attempt to activate an already activated company
         if ($this->isActivated) {
             throw new \DomainException('Company\'s been activated already');
         }
         // 2. error if confirmation code is not valid
-        if ($confirmationCode !== $this->getConfirmationCode()) {
+        if ($confirmationCode !== $this->getConfirmationCode($salt)) {
             throw new \DomainException('Confirmation code is not valid');
         }
         // 3. activates company

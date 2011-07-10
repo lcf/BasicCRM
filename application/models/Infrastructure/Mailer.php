@@ -25,39 +25,54 @@ class Mailer
      */
     protected $fromName;
 
-    public function __construct(\Zend_Config $config)
+    public function __construct(\Zend_Mail_Transport_Abstract $sender, \Zend_View_Interface $builder, $defaultFromEmail, $defaultFromName)
     {
-        $transportClass = $config->get('transportClass');
-        $options = $config->get('options');
-        if ($transportClass == '\Zend_Mail_Transport_Smtp') {
-            $sender = new \Zend_Mail_Transport_Smtp($options->get('host'), $options->toArray());
-        } else {
-            $sender = new $transportClass($options->toArray());
-        }
-        $builder = new \Zend_View(array('scriptPath' => APPLICATION_PATH . '/templates'));
         $this->sender = $sender;
         $this->builder = $builder;
-        $this->fromEmail = $config->get('fromEmail');
-        $this->fromName = $config->get('fromName');
+        $this->fromEmail = $defaultFromEmail;
+        $this->fromName = $defaultFromName;
     }
 
+    /**
+     * Sends registration confirmation email to the administrator of the
+     * given company
+     *
+     * @param \Domain\Company $company
+     * @return void
+     */
     public function registrationConfirmation(\Domain\Company $company)
     {
+        $salt = \ServiceLocator::getDomainConfig()->get('confirmationCodeSalt');
         $admin = $company->getAdmin();
-        return $this->mail(
+        $this->mail(
             'BasicCRM registration confirmation',
             'company/registration-confirmation',
             $admin->getEmail(),
             $admin->getName(),
-            array('company' => $company)
+            array('company' => $company, 'salt' => $salt)
         );
     }
 
+    /**
+     * Renders given template, sets mail message parameters such as
+     * to, from, subject
+     * and sends using the builder.
+     *
+     * @throws \RuntimeException
+     * @param $subject
+     * @param $template
+     * @param $toEmail
+     * @param $toName
+     * @param array $parameters
+     * @return void
+     */
     protected function mail($subject, $template, $toEmail, $toName, $parameters = array())
     {
         $mail = new Mail();
+        // Passing the parameters to the Zend_View instance
         $this->builder->assign($parameters);
-        // You may wish to refactor the following try & catch blocks to utilizing is_readable()
+        // Here we try to render both .txt and .html files for the template
+        // You may wish to refactor the following try & catch blocks to utilizing is_readable() instead
         $atLeastOnePartRendered = false;
         try {
             $mail->setBodyHtml($this->builder->render($template . '.html'));
@@ -67,12 +82,15 @@ class Mailer
             $mail->setBodyText($this->builder->render($template . '.txt'));
             $atLeastOnePartRendered = true;
         } catch (\Zend_View_Exception $exception) {}
+        // at least one email version must exist
         if (!$atLeastOnePartRendered) {
             throw new \RuntimeException('No templates found for ' . $template);
         }
+        // setting email parameters
         $mail->setSubject($subject);
         $mail->addTo($toEmail, $toName);
         $mail->setFrom($this->fromEmail, $this->fromName);
+        // sending
         $this->sender->send($mail);
     }
 }

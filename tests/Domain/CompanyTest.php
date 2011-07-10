@@ -116,13 +116,30 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
+     * there is a way to calculate the code required for company registration confirmation
+     *     1. to calculate the code security salt is required
+     *     2. code is a hash function from company id, security salt and company name
+     */
+    public function testGetConfirmationCode()
+    {
+        $company = $this->_getCompany();
+        $id = \PHPUnit_Framework_Assert::readAttribute($company, 'id');
+        $name = \PHPUnit_Framework_Assert::readAttribute($company, 'name');
+        $salt = 'SomeRandomSalt';
+
+        $confirmationCode = sha1($id . $salt . $name);
+        $this->assertEquals($confirmationCode, $company->getConfirmationCode($salt));
+    }
+
+    /*
      * may be activated with a confirmation code
      */
     public function testMayBeActivatedWithConfirmationCode()
     {
         $company = $this->_getCompany();
-        $confirmationCode = $company->getConfirmationCode();
-        $company->activate($confirmationCode);
+        $salt = 'TestSalt';
+        $confirmationCode = $company->getConfirmationCode($salt);
+        $company->activate($confirmationCode, $salt);
         $this->assertAttributeEquals(true, 'isActivated', $company);
     }
 
@@ -132,11 +149,12 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
     public function testCanBeActivatedOnlyOnce()
     {
         $company = $this->_getCompany();
-        $confirmationCode = $company->getConfirmationCode();
-        $company->activate($confirmationCode);
+        $salt = 'TestSalt';
+        $confirmationCode = $company->getConfirmationCode($salt);
+        $company->activate($confirmationCode, $salt);
         // attempt to activate it again
         $this->setExpectedException('DomainException', 'Company\'s been activated already');
-        $company->activate($confirmationCode);
+        $company->activate($confirmationCode, $salt);
     }
 
     /*
@@ -145,9 +163,10 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
     public function testValidConfirmationCode()
     {
         $company = $this->_getCompany();
-        $confirmationCode = $company->getConfirmationCode();
+        $salt = 'TestSalt';
+        $confirmationCode = $company->getConfirmationCode($salt);
         $this->setExpectedException('DomainException', 'Confirmation code is not valid');
-        $company->activate($confirmationCode . 'wrong');
+        $company->activate($confirmationCode . 'wrong', $salt);
     }
 
     /*
