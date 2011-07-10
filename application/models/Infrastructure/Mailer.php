@@ -49,7 +49,8 @@ class Mailer
             'company/registration-confirmation',
             $admin->getEmail(),
             $admin->getName(),
-            array('company' => $company, 'salt' => $salt)
+            array('companyId' => $company->getId(),
+                  'confirmationCode' => $company->getConfirmationCode($salt))
         );
     }
 
