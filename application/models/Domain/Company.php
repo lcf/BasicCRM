@@ -15,13 +15,13 @@ class Company
     /** @Column(type="string") */
     protected $name;
 
-    /** @ManyToOne(targetEntity="Domain\Subscription") */
+    /** @ManyToOne(targetEntity="Subscription") */
     protected $subscription;
 
     /** @Column(name="is_activated", type="boolean") */
     protected $isActivated;
 
-    /** @OneToMany(targetEntity="Domain\User", mappedBy="company", cascade={"all"}) */
+    /** @OneToMany(targetEntity="User", mappedBy="company", cascade={"all"}) */
     protected $users;
 
     public function __construct($name, Subscription $subscription, User $admin)
