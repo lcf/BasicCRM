@@ -1,3 +1,8 @@
+<?
+    // Preparing some current session data
+    $companyName = $this->session->getUser()->getCompany()->getName();
+    $loginedAs = $this->session->getUser()->getEmail();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -12,13 +17,13 @@
 <body id="type-b">
 <div id="wrap">
 	<div id="header">
-		<div id="site-name">BasicCRM</div>
+		<div id="site-name">BasicCRM for <?= $companyName ?></div>
 		<ul id="nav">
-		<li class="first"><a href="/">Home</a></li>
+		<li class="first"><a href="/company/dashboard">Dashboard (<?= $loginedAs ?>)</a></li>
 		<li class="last"><a href="#">About</a>
 			<ul>
-			<li class="first"><a href="http://blog.lcf.name">Underground Programming Blog</a></li>
-			<li class="last"><a href="http://lcf.name">LCF.NAME</a></li>
+                <li class="first"><a href="http://blog.lcf.name">Underground Programming Blog</a></li>
+                <li class="last"><a href="http://lcf.name">LCF.NAME</a></li>
 			</ul>
 		</li>
 		</ul>
@@ -27,11 +32,9 @@
 	<div id="content-wrap">
 		<div id="utility">
     		<ul id="nav-secondary">
-			    <li class="first"><a href="/company/register">Register a new company</a></li>
-			    <li class="last"><a href="/auth/login">Sign in</a></li>
+			    <li class="first"><a href="/auth/logout">Sign out</a></li>
 			</ul>
 		</div>
-		
 		<div id="content">
             <?= $this->layout()->content ?>
 			<div id="footer">

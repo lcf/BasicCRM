@@ -26,4 +26,3 @@ class ErrorController extends Zend_Controller_Action
         $this->view->assign('message', $message);
     }
 }
-

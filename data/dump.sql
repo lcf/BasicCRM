@@ -44,3 +44,17 @@ CREATE  TABLE `users` (
 INSERT INTO `subscriptions` (`id`, `name`) VALUES (1, 'Standard');
 INSERT INTO `subscriptions` (`id`, `name`) VALUES (2, 'Pro');
 
+-- table for sessions
+
+CREATE  TABLE `sessions` (
+  `id` VARCHAR(32) NOT NULL ,
+  `modified` TIMESTAMP NULL ,
+  `user_id` INT(11) NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
+  INDEX `session_user` (`user_id` ASC) ,
+  CONSTRAINT `session_user`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `users` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);

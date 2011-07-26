@@ -10,7 +10,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      *
      * @return \Domain\Company
      */
-    protected function _getCompany()
+    protected function getCompany()
     {
         $subscription = $this->getMock('Domain\Subscription');
         // We should create a mocked user here, too, but it's easier to create a real one.
@@ -27,7 +27,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testHasId()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         // just checking that the attribute exists
         $this->assertAttributeEmpty('id', $company);
     }
@@ -37,7 +37,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetId()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $this->assertAttributeEquals($company->getId(), 'id', $company);
     }
 
@@ -47,7 +47,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testHasName()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         // just checking that the attribute exists
         $this->assertAttributeEquals('Test Company', 'name', $company);
     }
@@ -81,7 +81,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testHasAtLeastOneUser()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $this->assertAttributeNotEmpty('users', $company);
     }
 
@@ -102,7 +102,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testMayBeActivatedOrNot()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $this->assertAttributeInternalType('boolean', 'isActivated', $company);
     }
 
@@ -111,8 +111,21 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsNotActivatedByDefault()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $this->assertAttributeEquals(false, 'isActivated', $company);
+    }
+    
+    /*
+     * there is a way to figure out whether a company is activated
+     */
+    public function testIsActivated()
+    {
+        $company = $this->getCompany();
+        $this->assertFalse($company->isActivated());
+        $salt = 'TestSalt';
+        $confirmationCode = $company->getConfirmationCode($salt);
+        $company->activate($confirmationCode, $salt);
+        $this->assertTrue($company->isActivated());
     }
 
     /*
@@ -122,7 +135,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetConfirmationCode()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $id = \PHPUnit_Framework_Assert::readAttribute($company, 'id');
         $name = \PHPUnit_Framework_Assert::readAttribute($company, 'name');
         $salt = 'SomeRandomSalt';
@@ -136,7 +149,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testMayBeActivatedWithConfirmationCode()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $salt = 'TestSalt';
         $confirmationCode = $company->getConfirmationCode($salt);
         $company->activate($confirmationCode, $salt);
@@ -148,7 +161,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanBeActivatedOnlyOnce()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $salt = 'TestSalt';
         $confirmationCode = $company->getConfirmationCode($salt);
         $company->activate($confirmationCode, $salt);
@@ -162,7 +175,7 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidConfirmationCode()
     {
-        $company = $this->_getCompany();
+        $company = $this->getCompany();
         $salt = 'TestSalt';
         $confirmationCode = $company->getConfirmationCode($salt);
         $this->setExpectedException('DomainException', 'Confirmation code is not valid');

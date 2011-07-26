@@ -26,8 +26,23 @@ class CompanyController extends Zend_Controller_Action
         );
     }
 
+    public function dashboardAction()
+    {
+        
+    }
+
     public function registerSuccessAction()
     {
         // just view here
+    }
+
+    public function indexAction()
+    {
+        // just view here
+    }
+
+    public function addUserAction()
+    {
+        throw new \Zend_Controller_Action_Exception('Not implemented yet', 404);
     }
 }

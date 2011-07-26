@@ -56,9 +56,19 @@ class Company
         }
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function getConfirmationCode($salt)
     {
         return sha1($this->id . $salt . $this->name);
+    }
+
+    public function isActivated()
+    {
+        return $this->isActivated;
     }
 
     public function activate($confirmationCode, $salt)

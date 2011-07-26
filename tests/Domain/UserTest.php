@@ -113,6 +113,30 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($company, 'company', $user);
     }
 
+
+    /*
+     * there is a way to find out whether a user is activated
+     *     user is considered activated if the company they're in is activated
+     */
+    public function testIsActivated()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456');
+        $company = $this->getMock('Domain\Company', array(), array(), '', false);
+        $company->expects($this->once())
+                ->method('isActivated')
+                ->will($this->returnValue(true));
+        $user->setCompany($company);
+        $this->assertTrue($user->isActivated());
+        // not activated
+        $user = new User('valid-email@example.com', 'John Smith', '123456');
+        $company = $this->getMock('Domain\Company', array(), array(), '', false);
+        $company->expects($this->once())
+                ->method('isActivated')
+                ->will($this->returnValue(false));
+        $user->setCompany($company);
+        $this->assertFalse($user->isActivated());
+    }
+
     /*
      * belongs to a single company
      * (there will be an error on attempt to associate a user with

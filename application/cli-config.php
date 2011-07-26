@@ -12,11 +12,13 @@ set_include_path(implode(PATH_SEPARATOR, array(
     APPLICATION_PATH . '/../tests',
     get_include_path(),
 )));
+// We have to use our own autoloader due to the changes in Doctrine 2.1 involving Symfony\Component\Console
+$classLoader->unregister();
 
 // Registering the autoloader
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
 
-$helperSet = new Symfony\Component\Console\Helper\HelperSet(array(
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
     'em' => new Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper(ServiceLocator::getEm()),
 ));

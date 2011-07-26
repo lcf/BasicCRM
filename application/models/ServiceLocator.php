@@ -27,6 +27,11 @@ class ServiceLocator
     protected static $companyService;
 
     /**
+     * @var Services\AuthService
+     */
+    protected static $authService;
+
+    /**
      * @var Doctrine\ORM\EntityRepository
      */
     protected static $subscriptionRepository;
@@ -35,6 +40,11 @@ class ServiceLocator
      * @var Doctrine\ORM\EntityRepository
      */
     protected static $usersRepository;
+
+    /**
+     * @var Doctrine\ORM\EntityRepository
+     */
+    protected static $sessionsRepository;
 
     /**
      * @var Doctrine\ORM\EntityRepository
@@ -87,11 +97,22 @@ class ServiceLocator
         return self::$companyService;
     }
 
+    public static function getAuthService()
+    {
+        if (self::$authService === null) {
+            self::$authService = new \Services\AuthService();
+        }
+
+        return self::$authService;
+    }
+
     public static function getFrontController()
     {
         if (self::$frontController === null) {
             self::$frontController = Zend_Controller_Front::getInstance()
                 ->setControllerDirectory(APPLICATION_PATH . '/controllers');
+            Zend_Loader::loadClass('SessionActionHelper', APPLICATION_PATH . '/controllers/helpers');
+            Zend_Controller_Action_HelperBroker::addHelper(new SessionActionHelper());
             Zend_Layout::startMvc(
                 array('layoutPath' => APPLICATION_PATH . '/views/layouts', 'layout' => 'index'));
         }
@@ -203,6 +224,24 @@ class ServiceLocator
         }
 
         return self::$usersRepository;
+    }
+
+    public static function setSessionsRepository(Doctrine\Orm\EntityRepository $repository)
+    {
+        self::$sessionsRepository = $repository;
+    }
+
+    /**
+     * @static
+     * @return \Domain\SessionsRepository
+     */
+    public static function getSessionsRepository()
+    {
+        if (self::$sessionsRepository === null) {
+            self::$sessionsRepository = self::getEm()->getRepository('\Domain\Session');
+        }
+
+        return self::$sessionsRepository;
     }
 
     public static function setCompaniesRepository(Doctrine\Orm\EntityRepository $repository)

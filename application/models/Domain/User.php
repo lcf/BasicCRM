@@ -4,6 +4,8 @@ namespace Domain;
 /** @Entity @Table(name="users") */
 class User
 {
+    const PASSWORD_MINIMAL_LENGTH = 6;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
@@ -30,13 +32,28 @@ class User
         if (!\Zend_Validate::is($email, 'EmailAddress')) {
             throw new \DomainException('Email is not valid');
         }
-        if (6 > strlen($password)) {
+        if (self::PASSWORD_MINIMAL_LENGTH > strlen($password)) {
             throw new \DomainException('Wrong password length');
         }
         $this->email = $email;
         $this->name = $name;
-        $this->passwordHash = sha1($password);
+        $this->passwordHash = $this->calculatePasswordHash($password);
         $this->isAdmin = $isAdmin;
+    }
+
+    public function isPasswordValid($password)
+    {
+        return ($this->calculatePasswordHash($password) == $this->passwordHash);
+    }
+
+    public function isActivated()
+    {
+        return $this->company->isActivated();
+    }
+
+    protected function calculatePasswordHash($password)
+    {
+        return sha1($password);
     }
 
     public function isAdmin()
@@ -52,6 +69,11 @@ class User
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function getCompany()
+    {
+        return $this->company;
     }
 
     public function setCompany(Company $company)
