@@ -38,7 +38,7 @@ User login
 5. error if password is not valid
 6. starts new session for the user
 7. persists session in the data storage
-8. returns new session data // TODO: don't forget to mention in the post that according to my rules session data = session.
+8. returns new session data
 
 User logout
 -----------
