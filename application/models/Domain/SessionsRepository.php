@@ -3,7 +3,7 @@ namespace Domain;
 
 class SessionsRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getValid($id) //
+    public function getValid($id)
     {
         $session = $this->find($id);
         if (!$session) {
