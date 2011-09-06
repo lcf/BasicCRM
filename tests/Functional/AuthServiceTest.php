@@ -44,6 +44,16 @@ class AuthServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals($session->getId(), $table->getValue(0, 'id'));
     }
 
+    public function testChangeUserPassword()
+    {
+        $session = \ServiceLocator::getAuthService()->loginUser('john-smith@example.com', '1234567');
+        \ServiceLocator::getAuthService()->changeUserPassword($session->getId(), '1234567', 'abcdefgh', 'abcdefgh');
+        $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+        $actual->addTable('users');
+        $table = $actual->getTable('users');
+        $this->assertEquals(sha1('abcdefgh'), $table->getValue(0, 'password_hash'));
+    }
+
     public function testViewSession()
     {
         // just add new session to the db and check if the same is retrieved
