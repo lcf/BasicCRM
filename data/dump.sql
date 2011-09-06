@@ -58,3 +58,12 @@ CREATE  TABLE `sessions` (
     REFERENCES `users` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE);
+
+-- adding subscriptions basic functionality
+
+ALTER TABLE `subscriptions`
+  ADD COLUMN `users_limit` INT(11) NULL  AFTER `name` ,
+  ADD COLUMN `clients_limit` INT(11) NULL  AFTER `users_limit` ;
+
+UPDATE `subscriptions` SET `users_limit`=3, `clients_limit`=1000 WHERE `id`='1';
+UPDATE `subscriptions` SET `users_limit`=30, `clients_limit`=30000 WHERE `id`='2';

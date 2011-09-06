@@ -61,4 +61,9 @@ class CompanyService
             $mailer->registrationConfirmation($company);
         });
     }
+
+    public function addUserToCompany($sessionId, $userName, $userEmail)
+    {
+
+    }
 }

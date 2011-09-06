@@ -3,24 +3,29 @@ BasicCrm project
 
 BasicCrm is a demo project for the series of articles on applying Domain-Driven Design (http://en.wikipedia.org/wiki/Domain-driven_design) in PHP.
 Working version of the system may be found here: http://BasicCrm.lcf.name
-Model designing and building process is desribed in details here: http://blog.lcf.name, starting with this article: http://blog.lcf.name/2011/05/application-overview.html
+Model designing and building process is desribed in details here: http://blog.lcf.name/search/label/basic%20crm, starting with this article: http://blog.lcf.name/2011/05/application-overview.html
 
 
 Domain Model
 ============
     Here you'll find a short description and requirements for every part of the Domain reflected into the model
 
-TODO >>> Add a user // TODO: twitter bootstrap for this too?
+TODO: switch admin scenario
+TODO: twitter bootstrap for this too?
+
+TODO >>> Add a user to a company
 ----------
 TODO >>> 1. gets valid session by its identifier
 TODO >>> 2. error if current user is not an admin
 TODO >>> 3. error if email provided is already registered in the system
-TODO >>> 4. creates new non admin user account based on the email, name and password provided
-TODO >>> 5. adds new user account to the current company // TODO: add subsciption restraints
+TODO >>> 4. generates new random password of length 8 for the new user
+TODO >>> 4. creates new non admin user account based on the email and name provided, password generated
+TODO >>> 5. adds new user account to the current company
 TODO >>> 6. saves the new user in the data storage
+TODO >>> 7. sends an email for the new user with their login and password
 
 MVC >>> Change current user password
-----------------------------
+------------------------------------
 1. gets valid session by its identifier
 2. gets current user from the session
 3. error if provided current user's password is not valid
@@ -37,7 +42,7 @@ Register a company
 5. creates new user admin account based on the email, name and password provided
 6. creates company based on company name provided, new admin user and the subscription plan found
 7. saves the new company in the data storage
-8. sends out a confirmation email to confirm the email address
+8. sends a confirmation email to confirm the email address
 
 Registration confirmation
 -------------------------
@@ -124,9 +129,17 @@ Company
 * there is a way to figure out whether a company is activated
 * there is a way to figure out who's the administrator of a company
 * there is a way define a company's unique identifier
-
+* there is a way to add a user to a company
+    1. error if user is admin
+    2. error if users limit for the company subscription is reached
+    3. associates user with the company
+    4. adds user to the collection of users belonging to it
 
 Subscription plan
 -----------------
 * has a unique identifier for reference
 * has a name
+* has a certain number of users allowed
+* has a certain number of clients allowed
+* there is a way to get users limit
+* there is a way to get clients limit

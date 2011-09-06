@@ -29,7 +29,7 @@ class AuthService
         return $session;
     }
 
-    public function changeUserPassword($sessionId, $currentPassword, $newPassword, $newPasswordRepeated)
+    public function changeUserPassword($sessionId, $currentPassword, $newPassword, $newPasswordRepeated) // TODO: might need to make two different changeUserPassword and changeCurrentUserPassword
     {
         $sessionsRepository = \ServiceLocator::getSessionsRepository();
         $entityManager = \ServiceLocator::getEm();

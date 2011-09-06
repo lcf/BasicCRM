@@ -3,10 +3,14 @@
   <subscriptions
     id="1"
     name="Standard"
+    users_limit="3"
+    clients_limit="1000"
   />
   <subscriptions
     id="2"
     name="Pro"
+    users_limit="30"
+    clients_limit="30000"
   />
   <companies />
   <users />

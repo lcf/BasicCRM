@@ -36,7 +36,8 @@ class Company
         if (!$admin->isAdmin()) {
             throw new \DomainException('User must be a new admin in order to create a company');
         }
-        $this->addUser($admin);
+        $admin->setCompany($this);
+        $this->users[] = $admin;
     }
 
     public function getId()
@@ -85,12 +86,13 @@ class Company
         $this->isActivated = true;
     }
 
-    protected function addUser(User $newUser)
+    public function addUser(User $newUser)
     {
-        foreach ($this->users as $existingUser) {
-            if ($existingUser == $newUser) {
-                throw new \DomainException('User is in the company already');
-            }
+        if ($newUser->isAdmin()) {
+            throw new \DomainException('Only one administrator is allowed');
+        }
+        if (count($this->users) >= $this->subscription->getUsersLimit()) {
+            throw new \DomainException('Users limit reached');
         }
         $newUser->setCompany($this);
         $this->users[] = $newUser;

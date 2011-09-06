@@ -218,4 +218,76 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $company = new Company('Test Company', $subscription, $admin);
         $this->assertAttributeEquals($company, 'company', $admin);
     }
+
+    /*
+     * there is a way to add a user to a company
+     * aspect: adds user to the collection of users belonging to it
+     */
+    public function testAddUser()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())
+                     ->method('getUsersLimit')
+                     ->will($this->returnValue(30));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $subscription, $admin);
+
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321');
+        $company->addUser($user);
+        $users = new \Doctrine\Common\Collections\ArrayCollection(array($admin, $user));
+        $this->assertAttributeEquals($users, 'users', $company);
+    }
+
+    /*
+     * there is a way to add a user to a company
+     * aspect: error if user is admin
+     */
+    public function testOnlyOneAdminAllowed()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $subscription, $admin);
+
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321', true);
+        $this->setExpectedException('DomainException', 'Only one administrator is allowed');
+        
+        $company->addUser($user);
+    }
+
+    /*
+     * there is a way to add a user to a company
+     * aspect: error if users limit for the company subscription plan is reached
+     */
+    public function testAddUserLimitExceeded()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())
+                     ->method('getUsersLimit')
+                     ->will($this->returnValue(1));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $subscription, $admin);
+
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321', false);
+        $this->setExpectedException('DomainException', 'Users limit reached');
+
+        $company->addUser($user);
+    }
+
+    /*
+     * there is a way to add a user to a company
+     * aspect: associates user with the company
+     */
+    public function testAddUserAssociatesUserWithCompany()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())
+                     ->method('getUsersLimit')
+                     ->will($this->returnValue(30));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $subscription, $admin);
+
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321');
+        $company->addUser($user);
+        $this->assertEquals($company, $user->getCompany());
+    }
 }

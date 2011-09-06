@@ -3,6 +3,8 @@
   <subscriptions
     id="1"
     name="Standard"
+    users_limit="3"
+    clients_limit="1000"
   />
   <companies
       id="1"
