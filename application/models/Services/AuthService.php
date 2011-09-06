@@ -50,4 +50,8 @@ class AuthService
         $entityManager->flush();
         return $session;
     }
+
+    // TODO: an out of domain scenario for cleaning session tables to support design infrastructure
+    // extend config.cli for now, I guess
+    // or may be create application/utils/clear-sessions table
 }

@@ -8,8 +8,24 @@ Model designing and building process is desribed in details here: http://blog.lc
 
 Domain Model
 ============
-    Here you'll find a short description and requirements for every part of the Domain being reflected into the model
+    Here you'll find a short description and requirements for every part of the Domain reflected into the model
 
+TODO >>> Add a user // TODO: twitter bootstrap for this too?
+----------
+TODO >>> 1. gets valid session by its identifier
+TODO >>> 2. error if current user is not an admin
+TODO >>> 3. error if email provided is already registered in the system
+TODO >>> 4. creates new non admin user account based on the email, name and password provided
+TODO >>> 5. adds new user account to the current company // TODO: add subsciption restraints
+TODO >>> 6. saves the new user in the data storage
+
+TODO >>> Change current user password
+----------------------------
+TODO >>> 1. gets valid session by its identifier
+TODO >>> 2. error if provided current password is not valid
+TODO >>> 3. error if new password provided twice is not repeated correctly
+TODO >>> 4. changes user password // TODO change User entity to rely on changePassword function in construction to avoid logic duplication
+TODO >>> 6. saves user in the data storage
 
 Register a company
 ------------------
