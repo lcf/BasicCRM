@@ -19,13 +19,14 @@ TODO >>> 4. creates new non admin user account based on the email, name and pass
 TODO >>> 5. adds new user account to the current company // TODO: add subsciption restraints
 TODO >>> 6. saves the new user in the data storage
 
-TODO >>> Change current user password
+MVC >>> Change current user password
 ----------------------------
-TODO >>> 1. gets valid session by its identifier
-TODO >>> 2. error if provided current password is not valid
-TODO >>> 3. error if new password provided twice is not repeated correctly
-TODO >>> 4. changes user password // TODO change User entity to rely on changePassword function in construction to avoid logic duplication
-TODO >>> 6. saves user in the data storage
+1. gets valid session by its identifier
+2. gets current user from the session
+3. error if provided current user's password is not valid
+4. error if new password provided twice is not repeated correctly
+5. changes current user's password
+6. saves the user in the data storage
 
 Register a company
 ------------------
@@ -92,7 +93,7 @@ User
 * has a unique identifier for reference
 * has a name
 * has a valid email
-* has a password not shorter than 6 characters, hashed
+* has a password set on creation
 * may be either admin or not admin (admin has some special privileges)
 * is not admin by default
 * there is a way to define whether a user is an admin or not
@@ -100,6 +101,8 @@ User
 * there is a way to find out user name
 * there is a way to find out whether a user is activated
     1. user is considered activated if the company they're in is activated
+* there is a way to set a password
+    1. not shorter than 6 characters, hashed
 * belongs to a single company
 
 Company

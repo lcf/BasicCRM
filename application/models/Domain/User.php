@@ -32,13 +32,18 @@ class User
         if (!\Zend_Validate::is($email, 'EmailAddress')) {
             throw new \DomainException('Email is not valid');
         }
+        $this->setPassword($password);
+        $this->email = $email;
+        $this->name = $name;
+        $this->isAdmin = $isAdmin;
+    }
+
+    public function setPassword($password)
+    {
         if (self::PASSWORD_MINIMAL_LENGTH > strlen($password)) {
             throw new \DomainException('Wrong password length');
         }
-        $this->email = $email;
-        $this->name = $name;
         $this->passwordHash = $this->calculatePasswordHash($password);
-        $this->isAdmin = $isAdmin;
     }
 
     public function isPasswordValid($password)

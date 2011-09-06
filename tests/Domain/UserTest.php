@@ -45,23 +45,34 @@ class UserTest extends \PHPUnit_Framework_TestCase
     }
 
     /*
-     * has a password not shorter than 6 characters, hashed
-     * aspect: password must be longer than 5 characters
+     * there is a way to set a password
+     * aspect: not shorter than 6 characters
      */
-    public function testHasPasswordNotShorterThan6Characters()
+    public function testSetPasswordNotShorterThan6Characters()
     {
         $this->setExpectedException('DomainException', 'Wrong password length');
-        new User('valid-email@example.com', 'John Smith', '12345');
+        $user = new User('valid-email@example.com', 'John Smith', '123456');
+        $user->setPassword('12345');
     }
 
     /*
-     * has a password not shorter than 6 characters, hashed
-     * aspect: has password hashed
+     * there is a way to set a password
+     * aspect: hashed
      */
-    public function testHasPasswordHashed()
+    public function testSetPasswordHashed()
     {
         $user = new User('valid-email@example.com', 'John Smith', '123456');
-        $this->assertAttributeEquals(sha1('123456'), 'passwordHash', $user);
+        $user->setPassword('abcdef');
+        $this->assertAttributeEquals(sha1('abcdef'), 'passwordHash', $user);
+    }
+
+    /*
+     * has a password set on creation
+     */
+    public function testHasPasswordSetOnCreation()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '12345678');
+        $this->assertAttributeEquals(sha1('12345678'), 'passwordHash', $user);
     }
 
     /*

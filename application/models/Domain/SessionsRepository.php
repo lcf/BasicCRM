@@ -3,6 +3,11 @@ namespace Domain;
 
 class SessionsRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @throws \DomainException
+     * @param $id
+     * @return \Domain\Session
+     */
     public function getValid($id)
     {
         $session = $this->find($id);

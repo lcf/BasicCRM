@@ -29,6 +29,25 @@ class AuthService
         return $session;
     }
 
+    public function changeUserPassword($sessionId, $currentPassword, $newPassword, $newPasswordRepeated)
+    {
+        $sessionsRepository = \ServiceLocator::getSessionsRepository();
+        $entityManager = \ServiceLocator::getEm();
+
+        $session = $sessionsRepository->getValid($sessionId);
+        $currentUser = $session->getUser();
+        if (!$currentUser->isPasswordValid($currentPassword)) {
+            throw new \DomainException('Entered current password is not valid');
+        }
+        if ($newPassword != $newPasswordRepeated) {
+            throw new \DomainException('Passwords are not equal');
+        }
+        $currentUser->setPassword($newPassword);
+
+        $entityManager->persist($currentUser);
+        $entityManager->flush();
+    }
+
     public function logoutUser($sessionId)
     {
         $sessionsRepository = \ServiceLocator::getSessionsRepository();
