@@ -64,6 +64,27 @@ class CompanyService
 
     public function addUserToCompany($sessionId, $userName, $userEmail)
     {
+        $sessionsRepository = \ServiceLocator::getSessionsRepository();
+        $entityManager = \ServiceLocator::getEm();
+        $usersRepository = \ServiceLocator::getUsersRepository();
+        $mailer = \ServiceLocator::getMailer();
 
+        $session = $sessionsRepository->getValid($sessionId);
+        if (!$session->getUser()->isAdmin()) {
+            throw new \DomainException('Only admin can add new users');
+        }
+        if ($usersRepository->findByEmail($userEmail)) {
+            throw new \DomainException('User with email ' . $userEmail . ' has been already registered'); // TODO: trsl
+        }
+        $password = substr(md5(rand(1, 1000000)), 0, 8);
+        $user = new User($userEmail, $userName, $password);
+        $session->getUser()->getCompany()->addUser($user);
+
+        $entityManager->transactional(function($entityManager) use ($user, $mailer, $password) {
+            $entityManager->persists($user);
+            $entityManager->flush();
+
+            $mailer->newUserWelcome($user, $password);
+        });
     }
 }

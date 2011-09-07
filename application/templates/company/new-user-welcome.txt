@@ -1,0 +1,7 @@
+Welcome to Basic CRM!
+
+You have been registered in <?= $this->companyName ?> organization account.
+You can login to your newly created account at http://basiccrm.lcf.name/auth/login
+
+Your login: <?= $this->email ?>
+Your password: <?= $this->password ?>

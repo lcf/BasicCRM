@@ -34,6 +34,26 @@ class Mailer
     }
 
     /**
+     * Sends login instructions for a new user
+     *
+     * @param \Domain\User $user
+     * @param string $password
+     * @return void
+     */
+    public function newUserWelcome(\Domain\User $user, $password)
+    {
+        $this->mail(
+            'Welcome to BasicCRM',
+            'company/new-user-welcome',
+            $user->getEmail(),
+            $user->getName(),
+            array('email' => $user->getEmail(),
+                  'companyName' => $user->getCompany()->getName(),
+                  'password' => $password)
+        );
+    }
+
+    /**
      * Sends registration confirmation email to the administrator of the
      * given company
      *

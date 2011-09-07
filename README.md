@@ -15,14 +15,14 @@ TODO: twitter bootstrap for this too?
 
 TODO >>> Add a user to a company
 ----------
-TODO >>> 1. gets valid session by its identifier
-TODO >>> 2. error if current user is not an admin
-TODO >>> 3. error if email provided is already registered in the system
-TODO >>> 4. generates new random password of length 8 for the new user
-TODO >>> 4. creates new non admin user account based on the email and name provided, password generated
-TODO >>> 5. adds new user account to the current company
-TODO >>> 6. saves the new user in the data storage
-TODO >>> 7. sends an email for the new user with their login and password
+1. gets valid session by its identifier
+2. error if current user is not an admin
+3. error if email provided is already registered in the system
+TEST >>> 4. generates new random password of length 8 for the new user
+TEST >>> 5. creates new non admin user account based on the email and name provided, password generated
+TEST >>> 6. adds new user account to the current company
+TEST >>> 7. saves the new user in the data storage
+TEST >>> 8. sends an email for the new user with their login and password
 
 MVC >>> Change current user password
 ------------------------------------

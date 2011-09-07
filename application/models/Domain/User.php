@@ -76,6 +76,9 @@ class User
         return $this->email;
     }
 
+    /**
+     * @return Company
+     */
     public function getCompany()
     {
         return $this->company;
