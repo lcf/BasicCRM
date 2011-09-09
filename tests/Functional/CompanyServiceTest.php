@@ -45,6 +45,23 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
                                          'john-smith@example.com', '1234567', '1234567');
     }
 
+    protected function _registerAndActivateCompany()
+    {
+        $this->_registerCompany();
+        $companyService = \ServiceLocator::getCompanyService();
+        $salt = \ServiceLocator::getDomainConfig()->get('confirmationCodeSalt');
+        $confirmationCode = sha1(1 . $salt . 'New Company');
+        $companyService->confirmCompanyRegistration(1, $confirmationCode);
+    }
+
+    protected function _registerAndActivateAndLoginAdmin()
+    {
+        $this->_registerAndActivateCompany();
+        $authService = \ServiceLocator::getAuthService();
+        $session = $authService->loginUser('john-smith@example.com', '1234567');
+        return $session->getId();
+    }
+
     protected function cleanTempFilesDir($tempFilesDir = null)
     {
         if ($tempFilesDir === null) {
@@ -78,6 +95,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
             return quoted_printable_decode($body);
         } else {
             $this->fail('No files found');
+            return null;
         }
     }
 
@@ -108,5 +126,22 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         // we're listing tables that matter
         $actual->addTable('companies');
         $this->assertDataSetsEqual($expected, $actual);
+    }
+
+    public function testAddUserToCompany()
+    {
+        $adminSessionId = $this->_registerAndActivateAndLoginAdmin();
+        $this->cleanTempFilesDir();
+        \ServiceLocator::getCompanyService()->addUserToCompany($adminSessionId, 'Peter Smith', 'peter-smith@example.com');
+        // Now instead of checking db state, we check whether the new user can actually login
+        // with the credentials they received
+        $message = $this->getMailMessageText();
+        $parts = explode('Your login:', $message);
+        $parts = explode('Your password:', $parts[1]);
+        $login = trim($parts[0]);
+        $password = trim($parts[1]);
+        $this->assertEquals(8, strlen($password));
+        $this->assertInstanceOf('Domain\Session',
+                                \ServiceLocator::getAuthService()->loginUser($login, $password));
     }
 }

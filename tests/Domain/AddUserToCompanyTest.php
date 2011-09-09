@@ -57,14 +57,8 @@ class AddUserToCompanyTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(null)); // email is unique
     }
 
-    // ----------------------------------------------------------------------------------
-
-    /*
-     * gets valid session by its identifier
-     */
-    public function testGetsValidSession()
+    protected function mockSessionLookup()
     {
-        $this->mockUserLookupByEmail();
         $session = $this->getMock('Domain\Session', array(), array(), '', false);
         $user = $this->getMock('Domain\User', array(), array(), '', false);
         $user->expects($this->once())
@@ -81,6 +75,25 @@ class AddUserToCompanyTest extends \PHPUnit_Framework_TestCase
             ->method('getValid')
             ->with(md5('valid-session-id'))
             ->will($this->returnValue($session));
+    }
+
+    protected function mockEmTransactional()
+    {
+        $em = $this->emMock;
+        $this->emMock
+            ->expects($this->once())
+            ->method('transactional')
+            ->with($this->anything())
+            ->will($this->returnCallback(
+                function($value) use($em) {$value($em);}));
+    }
+
+    // ----------------------------------------------------------------------------------
+
+    public function testGetsValidSession()
+    {
+        $this->mockUserLookupByEmail();
+        $this->mockSessionLookup();
 
         $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
     }
@@ -106,11 +119,6 @@ class AddUserToCompanyTest extends \PHPUnit_Framework_TestCase
 
     public function testEmailMustBeUnique()
     {
-        $this->usersRepositoryMock
-            ->expects($this->once())
-            ->method('findByEmail')
-            ->with($this->anything())
-            ->will($this->returnValue($this->getMock('Domain\User', array(), array(), '', false)));
         $session = $this->getMock('Domain\Session', array(), array(), '', false);
         $user = $this->getMock('Domain\User', array(), array(), '', false);
         $user->expects($this->once())
@@ -124,18 +132,84 @@ class AddUserToCompanyTest extends \PHPUnit_Framework_TestCase
             ->method('getValid')
             ->with(md5('valid-session-id'))
             ->will($this->returnValue($session));
+        $this->usersRepositoryMock
+            ->expects($this->once())
+            ->method('findByEmail')
+            ->with($this->anything())
+            ->will($this->returnValue($this->getMock('Domain\User', array(), array(), '', false)));
         $this->setExpectedException('DomainException', 'User with email john@example.com has been already registered');
         $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
     }
 
-    public function testCreatesUser()
+//    public function testCreatesUser()
+//    {
+//        // TODO: refactor objects creation, recheck older scenarios and refactor them as well
+//        // either use ServiceLocator::create('ClassName', list of args);
+//        // or just static methods like User::new(list of args)
+//        // both can be mocked. first is a standard, think about possible problems with the second one
+//        // which seem to be nicer :)
+//        // then get back and complete tests here and in other places
+//    }
+
+    public function testAddsUserToCompany()
     {
-        // TODO: refactor objects creation, recheck older scenarios and refactor them as well
-        // either use ServiceLocator::create('ClassName', list of args);
-        // or just static methods like User::new(list of args)
-        // both can be mocked. first is a standard, think about possible problems with the second one
-        // which seem to be nicer :)
+        $this->mockUserLookupByEmail();
+        $session = $this->getMock('Domain\Session', array(), array(), '', false);
+        $user = $this->getMock('Domain\User', array(), array(), '', false);
+        $user->expects($this->once())
+             ->method('isAdmin')
+             ->will($this->returnValue(true));
+        $company = $this->getMock('Domain\Company', array(), array(), '', false);
+        $user->expects($this->once())
+             ->method('getCompany')
+             ->will($this->returnValue($company));
+        $session->expects($this->atLeastOnce())
+                ->method('getUser')
+                ->will($this->returnValue($user));
+        $this->sessionsRepositoryMock
+            ->expects($this->once())
+            ->method('getValid')
+            ->with(md5('valid-session-id'))
+            ->will($this->returnValue($session));
+        $company->expects($this->once())
+                ->method('addUser')
+                ->with($this->isInstanceOf('Domain\User'));
+        $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
     }
 
+    public function testPersistNewUser()
+    {
+        $this->mockUserLookupByEmail();
+        $this->mockSessionLookup();
+        $this->mockEmTransactional();
+        
+        $this->emMock
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->isInstanceOf('Domain\User'));
+
+        $this->emMock
+            ->expects($this->once())
+            ->method('flush');
+
+        $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
+    }
+
+    public function testSendsWelcomeEmail()
+    {
+        $this->mockUserLookupByEmail();
+        $this->mockSessionLookup();
+        $this->mockEmTransactional();
+
+        $this->mailerMock
+            ->expects($this->once())
+            ->method('newUserWelcome')
+            ->with(
+                $this->isInstanceOf('Domain\User'),
+                $this->isType('string')
+            );
+
+        $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
+    }
 }
 

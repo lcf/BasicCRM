@@ -81,7 +81,7 @@ class CompanyService
         $session->getUser()->getCompany()->addUser($user);
 
         $entityManager->transactional(function($entityManager) use ($user, $mailer, $password) {
-            $entityManager->persists($user);
+            $entityManager->persist($user);
             $entityManager->flush();
 
             $mailer->newUserWelcome($user, $password);
