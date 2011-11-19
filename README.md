@@ -145,9 +145,9 @@ Company
     3. associates user with the company
     4. adds user to the collection of users belonging to it
 * there is a way to switch administrator for the company to a user referenced by id
-1. error if the user referenced by id is not a member of the company
-2. removes admin rights from the current user
-3. grants admin privileges to the new user
+    1. error if the user referenced by id is not a member of the company
+    2. removes admin rights from the current user
+    3. grants admin privileges to the new user
 
 Subscription plan
 -----------------

@@ -291,6 +291,10 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($company, $user->getCompany());
     }
 
+    /*
+     * 2. removes admin rights from the current user
+     * 3. grants admin privileges to the new user
+     */
     public function testSwitchAdminTo()
     {
         $subscription = $this->getMock('Domain\Subscription');

@@ -97,7 +97,7 @@ class Company
             throw new \DomainException('Users limit reached');
         }
         $newUser->setCompany($this);
-        $this->users[] = $newUser;
+        $this->users->add($newUser);
     }
 
     public function switchAdminTo($userId)

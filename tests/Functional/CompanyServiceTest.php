@@ -104,7 +104,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->_registerCompany();
         $expected = $this->createFlatXMLDataSet(dirname(__FILE__).'/_files/register-company.xml');
         $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
-        // we're listing tables that matter 
+        // we're listing tables that matter
         $actual->addTable('users');
         $actual->addTable('companies');
         $this->assertDataSetsEqual($expected, $actual);
@@ -134,7 +134,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->cleanTempFilesDir();
         \ServiceLocator::getCompanyService()->addUserToCompany($adminSessionId, 'Peter Smith', 'peter-smith@example.com');
         // Now instead of checking db state, we check whether the new user can actually login
-        // with the credentials they received
+        // with the credentials they received. This is not strictly speaking right, we might need to improve later.
         $message = $this->getMailMessageText();
         $parts = explode('Your login:', $message);
         $parts = explode('Your password:', $parts[1]);
@@ -143,5 +143,29 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(8, strlen($password));
         $this->assertInstanceOf('Domain\Session',
                                 \ServiceLocator::getAuthService()->loginUser($login, $password));
+    }
+
+    public function testSwitchAdmin()
+    {
+        $adminSessionId = $this->_registerAndActivateAndLoginAdmin();
+        $this->cleanTempFilesDir();
+        \ServiceLocator::getCompanyService()->addUserToCompany($adminSessionId, 'Peter Smith', 'peter-smith@example.com');
+        $message = $this->getMailMessageText();
+        $parts = explode('Your login:', $message);
+        $parts = explode('Your password:', $parts[1]);
+        $password = trim($parts[1]);
+
+        \ServiceLocator::getEm()->getUnitOfWork()->clear(); // immitating a separate request. may need to add some automation here.
+        \ServiceLocator::getCompanyService()->switchAdmin($adminSessionId, '1234567', 2);
+        $expected = $this->createFlatXMLDataSet(dirname(__FILE__).'/_files/switch-admin.xml');
+        $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+        // we're listing tables that matter
+        $actual->addTable('users');
+        $this->assertDataSetsEqual($expected, $actual);
+//        // Now two users exists, making sure the first one is the admin, the second one is not
+//        $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+//        // check if a session record was created for the user
+//        $actual->addTable('users');
+//        $table = $actual->getTable('sessions');
     }
 }

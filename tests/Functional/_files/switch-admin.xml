@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+  <users
+      id="1"
+      name="John Smith"
+      email="john-smith@example.com"
+      password_hash="20eabe5d64b0e216796e834f52d61fd0b70332fc"
+      is_admin="0"
+      company_id="1"
+  />
+  <users
+      id="2"
+      name="Peter Smith"
+      email="peter-smith@example.com"
+      password_hash="*"
+      is_admin="1"
+      company_id="1"
+  />
+</dataset>
