@@ -10,21 +10,26 @@ Domain Model
 ============
     Here you'll find a short description and requirements for every part of the Domain reflected into the model
 
-TODO: switch admin scenario
-TODO: twitter bootstrap for this too?
+Switch company administrator
+------------
+1. gets valid session by its identifier
+2. error if current user is not an admin
+3. error if password specified is not a valid one
+4. switches admin for the current user's company to the user referenced by id
+5. saves changed company
 
-MVC >>> Add a user to a company
+Add a user to a company
 ----------
 1. gets valid session by its identifier
 2. error if current user is not an admin
 3. error if email provided is already registered in the system
-TEST >>> 4. generates new random password of length 8 for the new user
-TEST >>> 5. creates new non admin user account based on the email and name provided, password generated
+4. generates new random password of length 8 for the new user
+5. creates new non admin user account based on the email and name provided, password generated
 6. adds new user account to the current company
 7. saves the new user in the data storage
 8. sends an email for the new user with their login and password
 
-MVC >>> Change current user password
+Change current user password
 ------------------------------------
 1. gets valid session by its identifier
 2. gets current user from the session
@@ -103,12 +108,17 @@ User
 * is not admin by default
 * there is a way to define whether a user is an admin or not
 * there is a way to find out user email
+* there is a way to find out user unique identifier
 * there is a way to find out user name
 * there is a way to find out whether a user is activated
     1. user is considered activated if the company they're in is activated
 * there is a way to set a password
     1. not shorter than 6 characters, hashed
 * belongs to a single company
+* there is a way to revoke admin rights from a user
+    1. error if the user is not an admin
+* there is a way to grant a user administrative permissions
+    1. error if the user is already an admin
 
 Company
 -------
@@ -134,6 +144,10 @@ Company
     2. error if users limit for the company subscription is reached
     3. associates user with the company
     4. adds user to the collection of users belonging to it
+* there is a way to switch administrator for the company to a user referenced by id
+1. error if the user referenced by id is not a member of the company
+2. removes admin rights from the current user
+3. grants admin privileges to the new user
 
 Subscription plan
 -----------------

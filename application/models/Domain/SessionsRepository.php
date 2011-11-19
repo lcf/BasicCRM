@@ -10,6 +10,7 @@ class SessionsRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getValid($id)
     {
+        /* @var Session $session */
         $session = $this->find($id);
         if (!$session) {
             throw new \DomainException('Session is not found');

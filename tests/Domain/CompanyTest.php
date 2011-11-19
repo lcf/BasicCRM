@@ -290,4 +290,49 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $company->addUser($user);
         $this->assertEquals($company, $user->getCompany());
     }
+
+    public function testSwitchAdminTo()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())
+                     ->method('getUsersLimit')
+                     ->will($this->returnValue(30));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321');
+        // users get their IDs set when persisted. we pretend they were:
+        $reflection = new \ReflectionObject($user);
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($admin, 1);
+        $property->setValue($user, 2);
+
+        $company = new Company('Test Company', $subscription, $admin);
+        $company->addUser($user);
+        // switching
+        $this->assertFalse($user->isAdmin());
+        $this->assertTrue($admin->isAdmin());
+        $company->switchAdminTo(2);
+        $this->assertTrue($user->isAdmin());
+        $this->assertFalse($admin->isAdmin());
+    }
+
+    public function testSwitchAdminToNewAdminNotFound()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())
+                     ->method('getUsersLimit')
+                     ->will($this->returnValue(30));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321');
+        // users get their IDs set when persisted. we pretend they were:
+        $reflection = new \ReflectionObject($user);
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($admin, 1);
+        $property->setValue($user, 2);
+        $company = new Company('Test Company', $subscription, $admin);
+        $company->addUser($user);
+        $this->setExpectedException('DomainException', 'New administrator account is not found');
+        $company->switchAdminTo(3);
+    }
 }

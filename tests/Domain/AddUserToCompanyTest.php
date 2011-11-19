@@ -141,16 +141,6 @@ class AddUserToCompanyTest extends \PHPUnit_Framework_TestCase
         $this->getService()->addUserToCompany(md5('valid-session-id'), 'John Smith', 'john@example.com');
     }
 
-//    public function testCreatesUser()
-//    {
-//        // TODO: refactor objects creation, recheck older scenarios and refactor them as well
-//        // either use ServiceLocator::create('ClassName', list of args);
-//        // or just static methods like User::new(list of args)
-//        // both can be mocked. first is a standard, think about possible problems with the second one
-//        // which seem to be nicer :)
-//        // then get back and complete tests here and in other places
-//    }
-
     public function testAddsUserToCompany()
     {
         $this->mockUserLookupByEmail();

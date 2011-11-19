@@ -61,6 +61,11 @@ class User
         return sha1($password);
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function isAdmin()
     {
         return $this->isAdmin;
@@ -74,6 +79,22 @@ class User
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function revokeAdmin()
+    {
+        if (!$this->isAdmin) {
+            throw new \DomainException('User is not an admin');
+        }
+        $this->isAdmin = false;
+    }
+
+    public function grantAdmin()
+    {
+        if ($this->isAdmin) {
+            throw new \DomainException('User is already an admin');
+        }
+        $this->isAdmin = true;
     }
 
     /**

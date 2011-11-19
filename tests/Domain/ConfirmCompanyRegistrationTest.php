@@ -69,7 +69,6 @@ class ConfirmCompanyRegistrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testCompanyNotFound()
     {
-        $company = $this->getMockBuilder('Domain\Company')->disableOriginalConstructor()->getMock();
         $companyId = 12;
         $this->companiesRepositoryMock
             ->expects($this->once())

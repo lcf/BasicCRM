@@ -29,7 +29,7 @@ class AuthService
         return $session;
     }
 
-    public function changeUserPassword($sessionId, $currentPassword, $newPassword, $newPasswordRepeated) // TODO: might need to make two different changeUserPassword and changeCurrentUserPassword
+    public function changeUserPassword($sessionId, $currentPassword, $newPassword, $newPasswordRepeated) // TODO: rename to changeCurrentUserPassword
     {
         $sessionsRepository = \ServiceLocator::getSessionsRepository();
         $entityManager = \ServiceLocator::getEm();
@@ -72,5 +72,4 @@ class AuthService
 
     // TODO: an out of domain scenario for cleaning session tables to support design infrastructure
     // extend config.cli for now, I guess
-    // or may be create application/utils/clear-sessions table
 }

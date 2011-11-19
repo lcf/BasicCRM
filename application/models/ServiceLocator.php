@@ -63,6 +63,7 @@ class ServiceLocator
     {
         if (self::$mailer === null) {
             // getting the config for the mailer
+            /* @var Zend_Config $mailConfig */
             $mailConfig = self::getConfig()->get('mail');
             // particular transport class and transport options
             $transportClass = $mailConfig->get('transportClass');

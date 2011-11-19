@@ -192,6 +192,50 @@ class UserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('valid-email@example.com', $user->getEmail());
     }
 
+    public function testGetId()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $reflection = new \ReflectionObject($user);
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($user, 12345);
+
+        $this->assertEquals(12345, $user->getId());
+    }
+
+
+    public function testGrantFailsIfAdminAlready()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $this->assertTrue($user->isAdmin());
+        $this->setExpectedException('DomainException', 'User is already an admin');
+        $user->grantAdmin();
+    }
+
+    public function testGrantAdmin()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456');
+        $this->assertFalse($user->isAdmin());
+        $user->grantAdmin();
+        $this->assertTrue($user->isAdmin());
+    }
+
+    public function testRevokeFailsIfNotAdmin()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456');
+        $this->assertFalse($user->isAdmin());
+        $this->setExpectedException('DomainException', 'User is not an admin');
+        $user->revokeAdmin();
+    }
+
+    public function testRevokeAdmin()
+    {
+        $user = new User('valid-email@example.com', 'John Smith', '123456', true);
+        $this->assertTrue($user->isAdmin());
+        $user->revokeAdmin();
+        $this->assertFalse($user->isAdmin());
+    }
+
     /*
      * there is a way to define whether a user is an admin or not
      */

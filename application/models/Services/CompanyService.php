@@ -36,6 +36,7 @@ class CompanyService
         $mailer = \ServiceLocator::getMailer();
 
         // 1. finds the subscription plan by its identifier in the data storage
+        /* @var Domain\Subscription $subscription */
         $subscription = $subscriptionRepository->find($subscriptionId);
         // 2. error if the plan is for some reason not found
         if (!$subscription) {
@@ -62,6 +63,24 @@ class CompanyService
         });
     }
 
+    public function switchAdmin($sessionId, $currentAdminPassword, $newAdminId)
+    {
+        $sessionsRepository = \ServiceLocator::getSessionsRepository();
+        $entityManager = \ServiceLocator::getEm();
+        $session = $sessionsRepository->getValid($sessionId);
+        $currentUser = $session->getUser();
+        if (!$currentUser->isAdmin()) {
+            throw new \DomainException('Only admin can change administrator');
+        }
+        if (!$currentUser->isPasswordValid($currentAdminPassword)) {
+            throw new \DomainException('Password is wrong');
+        }
+        $company = $currentUser->getCompany();
+        $company->switchAdminTo($newAdminId);
+        $entityManager->persist($company);
+        $entityManager->flush();
+    }
+
     public function addUserToCompany($sessionId, $userName, $userEmail)
     {
         $sessionsRepository = \ServiceLocator::getSessionsRepository();
@@ -81,7 +100,7 @@ class CompanyService
         $session->getUser()->getCompany()->addUser($user);
 
         $entityManager->transactional(function($entityManager) use ($user, $mailer, $password) {
-            $entityManager->persist($user);
+            $entityManager->persist($user); // TODO: file a but to PhpStorm issue tracker about not seeing vars types here
             $entityManager->flush();
 
             $mailer->newUserWelcome($user, $password);
