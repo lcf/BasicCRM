@@ -10,7 +10,7 @@ class AuthServiceTest extends \PHPUnit_Extensions_Database_TestCase
         // As we use random data fixtures and they may interfere
         // we drop our unit of work so it'll start over every time
         // and identity map will behave as expected
-        \ServiceLocator::getEm()->getUnitOfWork()->clear();
+        \ServiceLocator::getEm()->clear();
     }
 
     protected function getConnection()

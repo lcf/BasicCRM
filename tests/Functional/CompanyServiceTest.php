@@ -10,7 +10,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         // As we use random data fixtures and they may interfere
         // we drop our unit of work so it'll start over every time
         // and identity map will behave as expected
-        \ServiceLocator::getEm()->getUnitOfWork()->clear();
+        \ServiceLocator::getEm()->clear();
     }
 
     protected function tearDown()
@@ -150,22 +150,22 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $adminSessionId = $this->_registerAndActivateAndLoginAdmin();
         $this->cleanTempFilesDir();
         \ServiceLocator::getCompanyService()->addUserToCompany($adminSessionId, 'Peter Smith', 'peter-smith@example.com');
-        $message = $this->getMailMessageText();
-        $parts = explode('Your login:', $message);
-        $parts = explode('Your password:', $parts[1]);
-        $password = trim($parts[1]);
-
-        \ServiceLocator::getEm()->getUnitOfWork()->clear(); // immitating a separate request. may need to add some automation here.
-        \ServiceLocator::getCompanyService()->switchAdmin($adminSessionId, '1234567', 2);
-        $expected = $this->createFlatXMLDataSet(dirname(__FILE__).'/_files/switch-admin.xml');
         $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
-        // we're listing tables that matter
         $actual->addTable('users');
-        $this->assertDataSetsEqual($expected, $actual);
-//        // Now two users exists, making sure the first one is the admin, the second one is not
-//        $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
-//        // check if a session record was created for the user
-//        $actual->addTable('users');
-//        $table = $actual->getTable('sessions');
+        // Now two users exists, making sure the first one is the admin, the second one is not
+        $table = $actual->getTable('users');
+        $this->assertEquals(2, $table->getRowCount());
+        $this->assertEquals(0, $table->getValue(1, 'is_admin'));
+        $this->assertEquals(1, $table->getValue(0, 'is_admin'));
+
+        \ServiceLocator::getEm()->clear(); // imitation of a separate request. TODO: may need to add some automation here.
+        \ServiceLocator::getCompanyService()->switchAdmin($adminSessionId, '1234567', 2);
+
+        // Now checking whether the admin flag has moved
+        $actual = new \PHPUnit_Extensions_Database_DataSet_QueryDataSet($this->getConnection());
+        $actual->addTable('users');
+        $table = $actual->getTable('users');
+        $this->assertEquals(0, $table->getValue(0, 'is_admin'));
+        $this->assertEquals(1, $table->getValue(1, 'is_admin'));
     }
 }
