@@ -1,8 +1,11 @@
-<h2>An error occurred</h2>
-<p class="error">
-    <?= $this->message ?>
-</p>
-<p>
-    <a href="javascript:history.go(-1);">Go back</a>
-    <a href="/">Home page</a>
-</p>
+<div class="page-header"> <? // TODO: page header view helper ?>
+    <h1>An error occured</h1>
+</div>
+
+<div class="alert-message block-message error">
+  <p><strong><?= $this->message ?></strong></p>
+  <div class="alert-actions">
+    <a class="btn small" href="javascript:history.go(-1);">Go to previous page</a>
+      <a class="btn small" href="/">Home page</a>
+  </div>
+</div>

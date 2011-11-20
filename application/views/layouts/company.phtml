@@ -3,46 +3,53 @@
     $companyName = $this->session->getUser()->getCompany()->getName();
     $loginedAs = $this->session->getUser()->getEmail();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>BasicCRM</title>
-<link rel="stylesheet" type="text/css" href="/css/main.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="/css/print.css" media="print" />
-<!--[if lte IE 6]>
-<link rel="stylesheet" type="text/css" href="/css/ie6_or_less.css" />
-<![endif]-->
+    <meta charset="utf-8">
+    <title>BasicCRM</title>
+    <meta name="description" content="Description can be found at blog.lcf.name">
+    <meta name="author" content="Alexander Steshenko">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
 </head>
-<body id="type-b">
-<div id="wrap">
-	<div id="header">
-		<div id="site-name">BasicCRM for <?= $companyName ?></div>
-		<ul id="nav">
-		<li class="first"><a href="/company/dashboard">Dashboard (<?= $loginedAs ?>)</a></li>
-		<li class="last"><a href="#">About</a>
-			<ul>
-                <li class="first"><a href="http://blog.lcf.name">Underground Programming Blog</a></li>
-                <li class="last"><a href="http://lcf.name">LCF.NAME</a></li>
-			</ul>
-		</li>
-		</ul>
-	</div>
-	
-	<div id="content-wrap">
-		<div id="utility">
-    		<ul id="nav-secondary">
-			    <li class="first"><a href="/auth/logout">Sign out</a></li>
-			</ul>
-		</div>
-		<div id="content">
-            <?= $this->layout()->content ?>
-			<div id="footer">
-			<p>Demo DDD web application for the series of articles</p>
-			<p><a href="http://blog.lcf.name">Underground Programming Blog</a> | <a href="http://lcf.name">LCF.NAME</a></p>
-			</div>
-		</div>
-	</div>
+<? //TODO: refactor views, remove repetitions ?>
+<body>
+<div class="topbar-wrapper" style="z-index: 5;">
+    <div class="topbar">
+        <div class="fill">
+            <div class="container">
+                <a class="brand" href="#">BasicCRM for <?= $companyName ?></a>
+                <ul class="nav">
+                    <li class="active"><a href="/company/dashboard">Dashboard</a></li>
+                    <li><a href="/index/about">About BasicCrm</a></li>
+                    <li><a href="http://lcf.name" target="_blank">Contact</a></li>
+                </ul>
+                <form action="/auth/logout" method="GET" class="pull-right">
+                    <span>Signed in as <?= $loginedAs ?></span>
+                    <button class="btn" type="submit">Sign out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="container-fluid">
+        <div class="sidebar">
+            <ul>
+                <li><a href="#">View users</a></li>
+                <li><a href="#">Add new user</a></li>
+                <li><a href="#">Manage clients</a></li>
+            </ul>
+        </div>
+        <div class="content"><?= $this->layout()->content ?></div>
+    </div>
 </div>
 </body>
 </html>

@@ -1,15 +1,30 @@
-<form action="/auth/login" method="POST" class="f-wrap-1">
-    <fieldset>
-    <h3>Fill the form to login</h3>
-    <label for="email"><b>Email:</b>
-        <input id="email" name="email" type="text" class="f-email" tabindex="1" /><br />
-    </label>
-    <label for="password"><b>Password:</b>
-        <input id="password" name="password" type="password" class="f-name" tabindex="2" /><br />
-    </label>
-    <div class="f-submit-wrap">
-        <input type="submit" value="Login" class="f-submit" tabindex="3" /><br />
+<div class="page-header">
+    <h1>Fill the form to sign in</h1>
+</div>
+<div class="row">
+    <div class="span12">
+        <form action="/auth/login" method="POST">
+            <fieldset>
+                <div class="clearfix">
+                    <label for="email">Email:</label>
+
+                    <div class="input">
+                        <input id="email" name="email" type="text"/></div>
+                </div>
+
+
+                <div class="clearfix">
+                    <label for="password">Password:</label>
+
+                    <div class="input">
+                        <input id="password" name="password" type="password"/>
+                    </div>
+                </div>
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Sign in"/>
+                </div>
+            </fieldset>
+        </form>
     </div>
-    </fieldset>
-</form>
+</div>
 

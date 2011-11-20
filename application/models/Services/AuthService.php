@@ -13,7 +13,7 @@ class AuthService
 
         $user = $usersRepository->findOneByEmail($email);
         if (!$user) {
-            throw new \DomainException('User with such email is not registered');
+            throw new \DomainException('User with this email is not registered');
         }
         if (!$user->isActivated()) {
             throw new \DomainException('User is not activated');

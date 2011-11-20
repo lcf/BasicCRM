@@ -75,7 +75,7 @@ class LoginUserTest extends \PHPUnit_Framework_TestCase
             ->method('findOneByEmail')
             ->with('not-exist@example.com')
             ->will($this->returnValue(null));
-        $this->setExpectedException('DomainException', 'User with such email is not registered');
+        $this->setExpectedException('DomainException', 'User with this email is not registered');
         $this->getService()->loginUser('not-exist@example.com', '123456');
     }
 

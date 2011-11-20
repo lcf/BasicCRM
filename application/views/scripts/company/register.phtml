@@ -1,33 +1,53 @@
-<form action="/company/register" method="POST" class="f-wrap-1">
-    <fieldset>
-    <h3>Fill the form to register a new company</h3>
-    <label for="name"><b>Enter your organization name:</b>
-        <input id="name" name="name" type="text" class="f-name" tabindex="1" /><br />
-    </label>
-    <label for="admin-name"><b>Enter administrator account name:</b>
-        <input id="admin-name" name="admin-name" type="text" class="f-name" tabindex="2" /><br />
-    </label>
-    <label for="admin-email"><b>Enter administrator account email:</b>
-        <input id="admin-email" name="admin-email" type="text" class="f-email" tabindex="3" /><br />
-    </label>
-    <label for="password"><b>Enter password:</b>
-        <input id="password" name="password" type="password" class="f-name" tabindex="4" /><br />
-    </label>
-    <label for="confirm-password"><b>Confirm password:</b>
-        <input id="confirm-password" name="confirm-password" type="password" class="f-name" tabindex="5" /><br />
-    </label>
-    <label for="subscription-plan"><b>Choose a subscription plan:</b>
-        <select name="subscription-plan" id="subscription-plan">
-            <?/*
-                You'll have to add a couple of subscriptions plans to the db manually.
-            */?>
-            <option value="1">Standard</option>
-            <option value="2">Pro</option>
-        </select>
-    </label>
-    <div class="f-submit-wrap">
-        <input type="submit" value="Register" class="f-submit" tabindex="12" /><br />
-    </div>
-    </fieldset>
-</form>
+<div class="page-header">
+    <h1>Fill the form to register a new company</h1>
+</div>
+<div class="row">
+    <div class="span12">
+        <form action="/company/register" class="form-stacked" method="POST">
+            <fieldset>
+                <div class="clearfix">
+                    <label for="name">Organization name:</label>
 
+                    <div class="input">
+                        <input id="name" name="name" type="text"/>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="admin-name">Administrator name:</label>
+
+                    <div class="input">
+                        <input id="admin-name" name="admin-name" type="text"/>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="admin-email">Administrator email:</label>
+
+                    <div class="input"><input id="admin-email" name="admin-email" type="text"/></div>
+                </div>
+                <div class="clearfix">
+                    <label for="password">Admin password:</b></label>
+
+                    <div class="input"><input id="password" name="password" type="password"/></div>
+                </div>
+                <div class="clearfix">
+                    <label for="confirm-password">Confirm password:</label>
+
+                    <div class="input"><input id="confirm-password" name="confirm-password" type="password"/></div>
+                </div>
+                <div class="clearfix">
+                    <label for="subscription-plan">Choose a subscription plan:</label>
+                    <? // TODO: subscriptions list scenario ?>
+                    <div class="input">
+                        <select name="subscription-plan" id="subscription-plan">
+                            <option value="1">Standard</option>
+                            <option value="2">Pro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Register"/>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

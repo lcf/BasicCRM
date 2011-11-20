@@ -18,29 +18,29 @@
 <body>
 <div class="topbar-wrapper" style="z-index: 5;">
     <div class="topbar">
-      <div class="fill">
-        <div class="container">
-          <a class="brand" href="#">BasicCRM</a>
-          <ul class="nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="/index/about">About</a></li>
-            <li><a href="http://lcf.name" target="_blank">Contact</a></li>
-          </ul>
-          <form action="" class="pull-right">
-            <input class="input-small" type="text" placeholder="Username">
-            <input class="input-small" type="password" placeholder="Password">
-            <button class="btn" type="submit">Sign in</button>
-          </form>
+        <div class="fill">
+            <div class="container">
+                <a class="brand" href="#">BasicCRM</a>
+                <ul class="nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/index/about">About</a></li>
+                    <li><a href="http://lcf.name" target="_blank">Contact</a></li>
+                </ul>
+                <form action="/auth/login" method="POST" class="pull-right">
+                    <input class="input-small" type="text" placeholder="Email" name="email"/>
+                    <input class="input-small" type="password" placeholder="Password" name="password"/>
+                    <button class="btn" type="submit">Sign in</button>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 <div class="container">
     <div class="container-fluid">
         <div class="sidebar">
             <ul>
-                <li><a href="/company/register">Register a new company</a></li>
-			    <li><a href="/auth/login">Sign in</a></li>
+                <li><a href="/company/register">Sign up</a></li>
+                <li><a href="/auth/login">Sign in</a></li>
 
             </ul>
         </div>
@@ -48,51 +48,4 @@
     </div>
 </div>
 </body>
-<? /*
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>BasicCRM</title>
-<link rel="stylesheet" type="text/css" href="/css/main.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="/css/print.css" media="print" />
-<!--[if lte IE 6]>
-<link rel="stylesheet" type="text/css" href="/css/ie6_or_less.css" />
-<![endif]-->
-</head>
-<body id="type-b">
-<div id="wrap">
-	<div id="header">
-		<div id="site-name">BasicCRM</div>
-		<ul id="nav">
-		<li class="first"><a href="/">Home</a></li>
-		<li class="last"><a href="#">About</a>
-			<ul>
-			<li class="first"><a href="http://blog.lcf.name">Underground Programming Blog</a></li>
-			<li class="last"><a href="http://lcf.name">LCF.NAME</a></li>
-			</ul>
-		</li>
-		</ul>
-	</div>
-	
-	<div id="content-wrap">
-		<div id="utility">
-    		<ul id="nav-secondary">
-			    <li class="first"><a href="/company/register">Register a new company</a></li>
-			    <li class="last"><a href="/auth/login">Sign in</a></li>
-			</ul>
-		</div>
-		
-		<div id="content">
-            <?= $this->layout()->content ?>
-			<div id="footer">
-			<p>Demo DDD web application for the series of articles</p>
-			<p><a href="http://blog.lcf.name">Underground Programming Blog</a> | <a href="http://lcf.name">LCF.NAME</a></p>
-			</div>
-		</div>
-	</div>
-</div>
-</body>
 </html>
-
- */?>
