@@ -1,0 +1,37 @@
+<div class="page-header">
+    <h1>Switch administrator account to different user</h1>
+</div>
+<p>
+    <strong>Make sure you know what you're doing</strong>. As multiply admin accounts are not allowed in BasicCRM system
+    you will loose all admin priveleges after switching administrator account to another user.
+</p>
+<div class="row">
+    <div class="span12">
+        <form action="/company/switch-admin" class="form-stacked" method="POST">
+            <fieldset>
+                <div class="clearfix">
+                    <label for="newadminid">Choose new administrator:</label>
+                    <div class="input">
+                        <select name="newadminid" id="newadminid">
+                            <? /* @var Domain\User $user */ ?>
+                            <? foreach ($this->users as $user): ?>
+                                <? if($user != $this->session->getUser()): // not showing the current user themselves ?>
+                                    <option value="<?= $user->getId() ?>"><?= $user->getName() ?></option>
+                                <? endif ?>
+                            <? endforeach ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="password">Enter your password:</b></label>
+
+                    <div class="input"><input id="password" name="password" type="password"/></div>
+                </div>
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Switch"/>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+

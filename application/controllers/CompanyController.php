@@ -58,4 +58,19 @@ class CompanyController extends Zend_Controller_Action
             $this->_redirect('/company/users');
         }
     }
+
+    public function switchAdminAction()
+    {
+        if ($this->_request->isPost()) {
+            ServiceLocator::getCompanyService()->switchAdmin(
+                $this->getRequest()->getCookie('sessionid'),
+                $this->getRequest()->getParam('password'),
+                $this->getRequest()->getParam(('newadminid'))
+            );
+            $this->_redirect('/company/users');
+        } else {
+            $this->view->assign('users', ServiceLocator::getCompanyService()->listCompanyUsers(
+                $this->getRequest()->getCookie('sessionid')));
+        }
+    }
 }

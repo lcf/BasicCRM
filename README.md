@@ -10,6 +10,11 @@ Domain Model
 ============
     Here you'll find a short description and requirements for every part of the Domain reflected into the model
 
+View current company users
+------------
+1. gets valid session by its identifier
+2. returns all users data for the current company
+
 Switch company administrator
 ------------
 1. gets valid session by its identifier

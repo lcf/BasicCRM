@@ -54,7 +54,9 @@ $loginedAs = $this->session->getUser()->getEmail();
             <ul>
                 <? if ($isAdmin) : ?>
                     <? // Admin only actions listed here ?>
-                    <li><a href="/company/add-user">Add new user</a></li>
+                    <li><a href="/company/add-user"><strong>Add new user</strong></a></li>
+                    <li><a href="/company/switch-admin"><strong>Switch administrator</strong></a></li>
+                    <li class="divider"></li>
                 <? endif ?>
                 <li><a href="/company/users">View colleagues</a></li>
                 <li><a href="/company/clients">Manage clients</a></li>
