@@ -1,1 +1,31 @@
+<div class="page-header">
+    <h1>Enter new user data</h1>
+</div>
+<p>
+New user will receive an email with randomly generated password which they can login with.
+Email verification is not required in this case.
+</p>
+<div class="row">
+    <div class="span12">
+        <form action="/company/add-user" class="form-stacked" method="POST">
+            <fieldset>
+                <div class="clearfix">
+                    <label for="name">Name:</label>
+
+                    <div class="input">
+                        <input id="name" name="name" type="text"/>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <label for="email">Email:</label>
+
+                    <div class="input"><input id="email" name="email" type="text"/></div>
+                </div>
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="Add this user"/>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
 

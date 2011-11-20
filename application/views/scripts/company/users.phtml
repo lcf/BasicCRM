@@ -1,0 +1,25 @@
+<div class="page-header">
+    <h1>User Accounts</h1>
+</div>
+<table class="bordered-table zebra-striped">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <? /* @var Domain\User $user */ ?>
+    <? foreach ($this->users as $user): ?>
+    <tr>
+        <td>
+            <?= $user->getName() ?>
+            <? if ($user->isAdmin()): ?>
+            <span class="label important">Admin</span>
+            <? endif ?>
+        </td>
+        <td><?= $user->getEmail() ?></td>
+    </tr>
+        <? endforeach ?>
+    </tbody>
+</table>

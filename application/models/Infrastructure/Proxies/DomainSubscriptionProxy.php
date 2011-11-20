@@ -20,6 +20,14 @@ class DomainSubscriptionProxy extends \Domain\Subscription implements \Doctrine\
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
@@ -28,10 +36,22 @@ class DomainSubscriptionProxy extends \Domain\Subscription implements \Doctrine\
     }
     
     
+    public function getUsersLimit()
+    {
+        $this->__load();
+        return parent::getUsersLimit();
+    }
+
+    public function getClientsLimit()
+    {
+        $this->__load();
+        return parent::getClientsLimit();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'name');
+        return array('__isInitialized__', 'id', 'name', 'usersLimit', 'clientsLimit');
     }
 
     public function __clone()

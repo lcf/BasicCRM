@@ -20,6 +20,14 @@ class DomainUserProxy extends \Domain\User implements \Doctrine\ORM\Proxy\Proxy
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
@@ -28,6 +36,12 @@ class DomainUserProxy extends \Domain\User implements \Doctrine\ORM\Proxy\Proxy
     }
     
     
+    public function setPassword($password)
+    {
+        $this->__load();
+        return parent::setPassword($password);
+    }
+
     public function isPasswordValid($password)
     {
         $this->__load();
@@ -38,6 +52,12 @@ class DomainUserProxy extends \Domain\User implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::isActivated();
+    }
+
+    public function getId()
+    {
+        $this->__load();
+        return parent::getId();
     }
 
     public function isAdmin()
@@ -56,6 +76,18 @@ class DomainUserProxy extends \Domain\User implements \Doctrine\ORM\Proxy\Proxy
     {
         $this->__load();
         return parent::getEmail();
+    }
+
+    public function revokeAdmin()
+    {
+        $this->__load();
+        return parent::revokeAdmin();
+    }
+
+    public function grantAdmin()
+    {
+        $this->__load();
+        return parent::grantAdmin();
     }
 
     public function getCompany()

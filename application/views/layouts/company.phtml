@@ -1,7 +1,9 @@
 <?
-    // Preparing some current session data
-    $companyName = $this->session->getUser()->getCompany()->getName();
-    $loginedAs = $this->session->getUser()->getEmail();
+// Preparing some current session data
+// NOTE: if we used DTOs "session data" would be currently logged in user and their company information.
+$companyName = $this->session->getUser()->getCompany()->getName();
+$isAdmin = $this->session->getUser()->isAdmin();
+$loginedAs = $this->session->getUser()->getEmail();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,9 +52,12 @@
     <div class="container-fluid">
         <div class="sidebar">
             <ul>
-                <li><a href="#">View users</a></li>
-                <li><a href="#">Add new user</a></li>
-                <li><a href="#">Manage clients</a></li>
+                <? if ($isAdmin) : ?>
+                    <? // Admin only actions listed here ?>
+                    <li><a href="/company/add-user">Add new user</a></li>
+                <? endif ?>
+                <li><a href="/company/users">View colleagues</a></li>
+                <li><a href="/company/clients">Manage clients</a></li>
             </ul>
         </div>
         <div class="content"><?= $this->layout()->content ?></div>

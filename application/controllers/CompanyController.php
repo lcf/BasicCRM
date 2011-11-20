@@ -26,9 +26,15 @@ class CompanyController extends Zend_Controller_Action
         );
     }
 
+    public function usersAction()
+    {
+        $this->view->assign('users', ServiceLocator::getCompanyService()->listCompanyUsers(
+            $this->getRequest()->getCookie('sessionid')));
+    }
+
     public function dashboardAction()
     {
-        
+        // just view here for now
     }
 
     public function registerSuccessAction()
@@ -43,6 +49,13 @@ class CompanyController extends Zend_Controller_Action
 
     public function addUserAction()
     {
-        throw new \Zend_Controller_Action_Exception('Not implemented yet', 404);
+        if ($this->_request->isPost()) {
+            ServiceLocator::getCompanyService()->addUserToCompany(
+                $this->getRequest()->getCookie('sessionid'),
+                $this->getRequest()->getParam('name'),
+                $this->getRequest()->getParam('email')
+            );
+            $this->_redirect('/company/users');
+        }
     }
 }

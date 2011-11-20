@@ -20,6 +20,14 @@ class DomainCompanyProxy extends \Domain\Company implements \Doctrine\ORM\Proxy\
     {
         if (!$this->__isInitialized__ && $this->_entityPersister) {
             $this->__isInitialized__ = true;
+
+            if (method_exists($this, "__wakeup")) {
+                // call this after __isInitialized__to avoid infinite recursion
+                // but before loading to emulate what ClassMetadata::newInstance()
+                // provides.
+                $this->__wakeup();
+            }
+
             if ($this->_entityPersister->load($this->_identifier, $this) === null) {
                 throw new \Doctrine\ORM\EntityNotFoundException();
             }
@@ -62,6 +70,24 @@ class DomainCompanyProxy extends \Domain\Company implements \Doctrine\ORM\Proxy\
     {
         $this->__load();
         return parent::activate($confirmationCode, $salt);
+    }
+
+    public function addUser(\Domain\User $newUser)
+    {
+        $this->__load();
+        return parent::addUser($newUser);
+    }
+
+    public function switchAdminTo($userId)
+    {
+        $this->__load();
+        return parent::switchAdminTo($userId);
+    }
+
+    public function getUsers()
+    {
+        $this->__load();
+        return parent::getUsers();
     }
 
 
