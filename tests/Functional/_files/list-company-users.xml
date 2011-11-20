@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+  <subscriptions
+    id="1"
+    name="Standard"
+    users_limit="3"
+    clients_limit="1000"
+  />
+  <subscriptions
+    id="2"
+    name="Pro"
+    users_limit="30"
+    clients_limit="30000"
+  />
+  <companies
+      id="1"
+      name="New Company"
+      subscription_id="1"
+      is_activated="1"
+  />
+  <users
+      id="1"
+      name="John Smith"
+      email="john-smith@example.com"
+      password_hash="20eabe5d64b0e216796e834f52d61fd0b70332fc"
+      is_admin="1"
+      company_id="1"
+  />
+  <users
+      id="2"
+      name="Peter Smith"
+      email="peter-smith@example.com"
+      password_hash="32eabe5d64b0e216796e834f52d61fd0b70332fc"
+      is_admin="0"
+      company_id="1"
+  />
+  <users
+      id="3"
+      name="Alex Smith"
+      email="alex-smith@example.com"
+      password_hash="32eabe5d64b0e216796e834f52d61fd0b7033232"
+      is_admin="0"
+      company_id="1"
+  />
+</dataset>

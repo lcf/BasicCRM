@@ -158,7 +158,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(0, $table->getValue(1, 'is_admin'));
         $this->assertEquals(1, $table->getValue(0, 'is_admin'));
 
-        \ServiceLocator::getEm()->clear(); // imitation of a separate request. TODO: may need to add some automation here.
+        \ServiceLocator::getEm()->clear(); // imitation of a separate request.
         // TODO: file an issue to Doctrine about automatic update of indexed collection on persist
         \ServiceLocator::getCompanyService()->switchAdmin($adminSessionId, '1234567', 2);
 
@@ -170,8 +170,20 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(1, $table->getValue(1, 'is_admin'));
     }
 
+    // TODO: refactor to use per test fixtures
+
     public function testListCompanyUsers()
     {
+        $this->databaseTester = NULL;
 
+        $this->getDatabaseTester()->setSetUpOperation($this->getSetUpOperation());
+        $this->getDatabaseTester()->setDataSet($this->createFlatXMLDataSet(dirname(__FILE__).'/_files/list-company-users.xml'));
+        $this->getDatabaseTester()->onSetUp();
+        $session = \ServiceLocator::getAuthService()->loginUser('john-smith@example.com', '1234567');
+        $users = \ServiceLocator::getCompanyService()->listCompanyUsers($session->getId());
+        $this->assertEquals(3, count($users));
+        foreach ($users as $user) {
+            $this->assertInstanceOf('Domain\User', $user);
+        }
     }
 }
