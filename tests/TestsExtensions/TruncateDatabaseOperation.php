@@ -15,6 +15,8 @@ class TruncateDatabaseOperation implements \PHPUnit_Extensions_Database_Operatio
 {
     public function execute(\PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection, \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet)
     {
+        // TODO: make it work with any possible order of tables coming
+
         /* @var $table PHPUnit_Extensions_Database_DataSet_ITable */
         foreach ($dataSet->getReverseIterator() as $table) {
             $query = "
