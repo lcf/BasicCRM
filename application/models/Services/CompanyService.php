@@ -100,7 +100,7 @@ class CompanyService
         $session->getUser()->getCompany()->addUser($user);
 
         $entityManager->transactional(function($entityManager) use ($user, $mailer, $password) {
-            $entityManager->persist($user); // TODO: file a but to PhpStorm issue tracker about not seeing vars types here
+            $entityManager->persist($user); // TODO: file a bug to PhpStorm issue tracker about not seeing vars types here
             $entityManager->flush();
 
             $mailer->newUserWelcome($user, $password);
