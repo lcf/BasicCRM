@@ -1,3 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BasicCRM</title>
+    <meta name="description" content="Description can be found at blog.lcf.name">
+    <meta name="author" content="Alexander Steshenko">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+</head>
+<? //TODO: refactor views, remove repetitions ?>
+<body>
+<div class="topbar-wrapper" style="z-index: 5;">
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="#">BasicCRM</a>
+          <ul class="nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/index/about">About</a></li>
+            <li><a href="http://lcf.name" target="_blank">Contact</a></li>
+          </ul>
+          <form action="" class="pull-right">
+            <input class="input-small" type="text" placeholder="Username">
+            <input class="input-small" type="password" placeholder="Password">
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="container-fluid">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/company/register">Register a new company</a></li>
+			    <li><a href="/auth/login">Sign in</a></li>
+
+            </ul>
+        </div>
+        <div class="content"><?= $this->layout()->content ?></div>
+    </div>
+</div>
+</body>
+<? /*
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -43,3 +94,5 @@
 </div>
 </body>
 </html>
+
+ */?>
