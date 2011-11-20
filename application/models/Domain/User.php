@@ -24,7 +24,10 @@ class User
     /** @Column(name="is_admin", type="boolean") */
     protected $isAdmin;
 
-    /** @ManyToOne(targetEntity="Company", inversedBy="users") */
+    /**
+     * @var Company
+     * @ManyToOne(targetEntity="Company", inversedBy="users")
+     */
     protected $company;
 
     public function __construct($email, $name, $password, $isAdmin = false)

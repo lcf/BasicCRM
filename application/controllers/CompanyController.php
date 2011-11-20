@@ -39,7 +39,7 @@ class CompanyController extends Zend_Controller_Action
 
     public function registerSuccessAction()
     {
-        // just view here
+        // just view here // TODO: try to get rid of extra actions ?
     }
 
     public function indexAction()

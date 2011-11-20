@@ -23,6 +23,24 @@ class AuthController extends Zend_Controller_Action
         }
     }
 
+    public function changePasswordSuccessAction()
+    {
+        // just view here
+    }
+
+    public function changePasswordAction()
+    {
+        if ($this->_request->isPost()) {
+            ServiceLocator::getAuthService()->changeUserPassword(
+                $this->getRequest()->getCookie('sessionid'),
+                $this->getRequest()->getParam('password'),
+                $this->getRequest()->getParam('new-password'),
+                $this->getRequest()->getParam('confirm-new-password')
+            );
+            $this->_redirect('/auth/change-password-success');
+        }
+    }
+
     public function logoutAction()
     {
         $authService = \ServiceLocator::getAuthService();
