@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <? // TODO: common header for all layouts ?>
     <meta charset="utf-8">
     <title>BasicCRM</title>
     <meta name="description" content="Description can be found at blog.lcf.name">
@@ -31,10 +32,16 @@
                     <li><a href="/index/about">About BasicCrm</a></li>
                     <li><a href="http://lcf.name" target="_blank">Contact</a></li>
                 </ul>
-                <form action="/auth/logout" method="GET" class="pull-right">
-                    <span>Signed in as <?= $loginedAs ?></span>
-                    <button class="btn" type="submit">Sign out</button>
-                </form>
+                <ul class="nav secondary-nav">
+                    <li class="dropdown" data-dropdown="dropdown">
+                        <a href="#" class="dropdown-toggle">Signed in as <?= $loginedAs ?></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/auth/logout">Sign out</a></li>
+                            <!--                <li class="divider"></li>-->
+                            <!--                <li><a href="#">Another link</a></li>-->
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
