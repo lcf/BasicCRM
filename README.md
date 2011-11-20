@@ -148,6 +148,7 @@ Company
     1. error if the user referenced by id is not a member of the company
     2. removes admin rights from the current user
     3. grants admin privileges to the new user
+* there is a way to get all company's users
 
 Subscription plan
 -----------------

@@ -159,6 +159,7 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $this->assertEquals(1, $table->getValue(0, 'is_admin'));
 
         \ServiceLocator::getEm()->clear(); // imitation of a separate request. TODO: may need to add some automation here.
+        // TODO: file an issue to Doctrine about automatic update of indexed collection on persist
         \ServiceLocator::getCompanyService()->switchAdmin($adminSessionId, '1234567', 2);
 
         // Now checking whether the admin flag has moved
@@ -167,5 +168,10 @@ class CompanyServiceTest extends \PHPUnit_Extensions_Database_TestCase
         $table = $actual->getTable('users');
         $this->assertEquals(0, $table->getValue(0, 'is_admin'));
         $this->assertEquals(1, $table->getValue(1, 'is_admin'));
+    }
+
+    public function testListCompanyUsers()
+    {
+
     }
 }

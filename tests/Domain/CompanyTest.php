@@ -339,4 +339,17 @@ class CompanyTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('DomainException', 'New administrator account is not found');
         $company->switchAdminTo(3);
     }
+
+    public function testGetUsers()
+    {
+        $subscription = $this->getMock('Domain\Subscription');
+        $subscription->expects($this->once())->method('getUsersLimit')->will($this->returnValue(30));
+        $admin = new \Domain\User('valid-email@example.com', 'John Smith', '123456', true);
+        $company = new Company('Test Company', $subscription, $admin);
+
+        $user = new \Domain\User('another-valid-email@example.com', 'Alex Smith', '654321');
+        $company->addUser($user);
+        $users = new \Doctrine\Common\Collections\ArrayCollection(array($admin, $user));
+        $this->assertEquals($users, $company->getUsers());
+    }
 }

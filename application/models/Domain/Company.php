@@ -111,4 +111,9 @@ class Company
         $currentAdmin->revokeAdmin();
         $newAdmin->grantAdmin();
     }
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
 }

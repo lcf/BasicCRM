@@ -106,4 +106,13 @@ class CompanyService
             $mailer->newUserWelcome($user, $password);
         });
     }
+
+    public function listCompanyUsers($sessionId)
+    {
+        $sessionsRepository = \ServiceLocator::getSessionsRepository();
+        return $sessionsRepository->getValid($sessionId)
+                                  ->getUser()
+                                  ->getCompany()
+                                  ->getUsers();
+    }
 }
