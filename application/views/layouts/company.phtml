@@ -7,21 +7,7 @@ $loginedAs = $this->session->getUser()->getEmail();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <? // TODO: common header for all layouts ?>
-    <meta charset="utf-8">
-    <title>BasicCRM</title>
-    <meta name="description" content="Description can be found at blog.lcf.name">
-    <meta name="author" content="Alexander Steshenko">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-        }
-    </style>
-</head>
+<?= $this->layoutHeader() ?>
 <? //TODO: refactor views, remove repetitions ?>
 <body>
 <div class="topbar-wrapper" style="z-index: 5;">
@@ -39,8 +25,6 @@ $loginedAs = $this->session->getUser()->getEmail();
                         <a href="#" class="dropdown-toggle">Signed in as <?= $loginedAs ?></a>
                         <ul class="dropdown-menu">
                             <li><a href="/auth/logout">Sign out</a></li>
-                            <!--                <li class="divider"></li>-->
-                            <!--                <li><a href="#">Another link</a></li>-->
                         </ul>
                     </li>
                 </ul>
