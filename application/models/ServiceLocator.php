@@ -115,7 +115,8 @@ class ServiceLocator
             Zend_Loader::loadClass('SessionActionHelper', APPLICATION_PATH . '/controllers/helpers');
             Zend_Controller_Action_HelperBroker::addHelper(new SessionActionHelper());
             Zend_Layout::startMvc(
-                array('layoutPath' => APPLICATION_PATH . '/views/layouts', 'layout' => 'index'));
+                array('layoutPath' => APPLICATION_PATH . '/views/layouts', 'layout' => 'index'))
+                    ->getView()->addHelperPath(APPLICATION_PATH . '/views/helpers', 'View_Helper');
         }
 
         return self::$frontController;
