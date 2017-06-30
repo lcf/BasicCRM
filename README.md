@@ -10,7 +10,7 @@ For domain model description see DOMAIN.md
 Running with Docker
 ===================
 
-There is not image distributed for the project at the moment. Clone the repository and build the image with `docker build .`.
+There is no image distributed for the project at the moment. Clone the repository and build the image with `docker build .`.
 Run the application with `docker run -d -p 80:80 ceb93a463e2d`. User your new image id. Access the website via http://127.0.0.1/
 
 The container comes with the web server and the database. By default emails are put in /tmp directory inside the container. In order to overwrite some of the configuration parameters, add `config.local.ini` to /var/www/application/configs/
