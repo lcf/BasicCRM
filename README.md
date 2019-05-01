@@ -3,7 +3,7 @@ BasicCrm project
 
 BasicCrm is a demo project for the series of articles on applying Domain-Driven Design (http://en.wikipedia.org/wiki/Domain-driven_design) in PHP.
 
-Model designing and building process is desribed in details here: http://blog.lcf.name/search/label/basic%20crm, starting with this article: http://blog.lcf.name/2011/05/application-overview.html
+Model designing and building process is desribed in details here: http://blog.lcf.name/, starting with this article: http://blog.lcf.name/2011/05/13/application-overview.html
 
 For domain model description see DOMAIN.md
 
